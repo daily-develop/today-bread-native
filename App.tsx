@@ -1,22 +1,24 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
+import { ApolloProvider } from '@apollo/client';
 
-import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
-import Navigation from './navigation';
+import client from '@/client';
 
-export default function App() {
-  const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
+import Main from '@/Main';
 
-  if (!isLoadingComplete) {
-    return null;
-  } else {
-    return (
-      <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
-      </SafeAreaProvider>
-    );
-  }
-}
+const App: React.FC = () => {
+  return (
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        <SafeAreaProvider>
+          <StatusBar />
+          <Main />
+        </SafeAreaProvider>
+      </NavigationContainer>
+    </ApolloProvider>
+  );
+};
+
+export default App;
