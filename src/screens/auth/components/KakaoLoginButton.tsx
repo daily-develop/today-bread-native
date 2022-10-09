@@ -14,7 +14,7 @@ const KakaoLoginButton: React.FC = () => {
   const navigation = useNavigation<navigationProp>();
 
   const handleOnPress = useCallback(() => {
-    navigation.push(AuthNavigations.AuthSignUp);
+    navigation.push(AuthNavigations.KakaoLogin);
   }, [navigation]);
 
   return (

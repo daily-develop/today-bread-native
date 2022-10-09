@@ -2,12 +2,12 @@ import { StackScreenProps } from '@react-navigation/stack';
 
 export enum RootNavigations {
   Auth = 'Auth',
-  UnAuth = 'UnAuth',
+  Main = 'Main',
 }
 
 export type RootStackParamList = {
   [RootNavigations.Auth]: undefined;
-  [RootNavigations.UnAuth]: undefined;
+  [RootNavigations.Main]: undefined;
 };
 
 export type RootStackParamProps<T extends RootNavigations> = StackScreenProps<

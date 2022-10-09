@@ -6,15 +6,17 @@ import { RootNavigations, RootStackParamProps } from '@/navigations/stack/root';
 export enum AuthNavigations {
   AuthHome = 'AuthHome',
   AuthSignUp = 'AuthSignUp',
+  KakaoLogin = 'KakaoLogin',
 }
 
 export type AuthStackParamList = {
   [AuthNavigations.AuthHome]: undefined;
-  [AuthNavigations.AuthSignUp]: undefined;
+  [AuthNavigations.AuthSignUp]: { type: 'KAKAO' | 'NAVER'; token: string };
+  [AuthNavigations.KakaoLogin]: undefined;
 };
 
 export type AuthStackParamProps<T extends AuthNavigations> =
   CompositeScreenProps<
     StackScreenProps<AuthStackParamList, T>,
-    RootStackParamProps<RootNavigations.UnAuth>
+    RootStackParamProps<RootNavigations.Auth>
   >;
