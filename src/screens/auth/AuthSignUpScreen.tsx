@@ -1,6 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { StackNavigationOptions } from '@react-navigation/stack';
+import {
+  CardStyleInterpolators,
+  StackNavigationOptions,
+} from '@react-navigation/stack';
 import { Feather, Ionicons } from '@expo/vector-icons';
 
 import { Colors } from '@/constants/color';
@@ -20,10 +23,11 @@ import tokenRepository from '@/repository/token.repository';
 
 export const AuthSignUpScreenOptions: StackNavigationOptions = {
   headerTitle: '',
+  cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
 };
 
 interface AuthSignUpScreenProps {
-  route: AuthStackParamProps<AuthNavigations.AuthSignUp>['route'];
+  route: AuthStackParamProps<AuthNavigations.SignUp>['route'];
 }
 
 const AuthSignUpScreen: React.FC<AuthSignUpScreenProps> = ({ route }) => {

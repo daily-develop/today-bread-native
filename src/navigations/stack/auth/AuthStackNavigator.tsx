@@ -23,12 +23,12 @@ const AuthStackNavigator: React.FC = () => {
   return (
     <Stack.Navigator screenOptions={stackNavigationOptions}>
       <Stack.Screen
-        name={AuthNavigations.AuthHome}
+        name={AuthNavigations.Home}
         component={AuthHomeScreen}
         options={AuthHomeScreenOptions}
       />
       <Stack.Screen
-        name={AuthNavigations.AuthSignUp}
+        name={AuthNavigations.SignUp}
         component={AuthSignUpScreen}
         options={AuthSignUpScreenOptions}
       />

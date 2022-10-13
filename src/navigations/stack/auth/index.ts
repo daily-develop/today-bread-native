@@ -4,14 +4,14 @@ import { CompositeScreenProps } from '@react-navigation/native';
 import { RootNavigations, RootStackParamProps } from '@/navigations/stack/root';
 
 export enum AuthNavigations {
-  AuthHome = 'AuthHome',
-  AuthSignUp = 'AuthSignUp',
-  KakaoLogin = 'KakaoLogin',
+  Home = 'AuthHome',
+  SignUp = 'AuthSignUp',
+  KakaoLogin = 'AuthKakaoLogin',
 }
 
 export type AuthStackParamList = {
-  [AuthNavigations.AuthHome]: undefined;
-  [AuthNavigations.AuthSignUp]: { type: 'KAKAO' | 'NAVER'; token: string };
+  [AuthNavigations.Home]: undefined;
+  [AuthNavigations.SignUp]: { type: 'KAKAO' | 'NAVER'; token: string };
   [AuthNavigations.KakaoLogin]: undefined;
 };
 

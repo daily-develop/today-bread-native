@@ -7,8 +7,7 @@ import { Colors } from '@/constants/color';
 
 import { AuthNavigations, AuthStackParamProps } from '@/navigations/stack/auth';
 
-type navigationProp =
-  AuthStackParamProps<AuthNavigations.AuthHome>['navigation'];
+type navigationProp = AuthStackParamProps<AuthNavigations.Home>['navigation'];
 
 const KakaoLoginButton: React.FC = () => {
   const navigation = useNavigation<navigationProp>();

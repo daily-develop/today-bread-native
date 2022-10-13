@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  CardStyleInterpolators,
   createStackNavigator,
   StackNavigationOptions,
 } from '@react-navigation/stack';
@@ -31,6 +32,7 @@ const RootStackNavigator: React.FC = () => {
 
 const screenOptions: StackNavigationOptions = {
   headerShown: false,
+  cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
 };
 
 export default RootStackNavigator;

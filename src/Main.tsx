@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useReactiveVar } from '@apollo/client';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 
-import RootStackNavigator from '@/navigations/stack/root/RootNavigator';
+import RootStackNavigator from '@/navigations/stack/root/RootStackNavigator';
 import { tokenVar } from '@/stores/auth';
 import TokenRepository from '@/repository/token.repository';
 import { REISSUE } from '@/operations/auth/mutation/ReIssue';

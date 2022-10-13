@@ -1,6 +1,9 @@
 import React, { useCallback } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import { StackNavigationOptions } from '@react-navigation/stack';
+import {
+  CardStyleInterpolators,
+  StackNavigationOptions,
+} from '@react-navigation/stack';
 import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import qs from 'qs';
 import axios from 'axios';
@@ -14,6 +17,7 @@ import tokenRepository from '@/repository/token.repository';
 
 export const KakaoLoginScreenOptions: StackNavigationOptions = {
   headerShown: false,
+  cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
 };
 
 const REDIRECT_URI: string = `${BASE_URL}/api/oauth/redirect`;
@@ -55,14 +59,14 @@ const KakaoLoginScreen: React.FC<KakaoLoginScreenProps> = ({ navigation }) => {
               tokenVar(res.data.signIn);
             })
             .catch(() => {
-              navigation.replace(AuthNavigations.AuthSignUp, {
+              navigation.replace(AuthNavigations.SignUp, {
                 type: 'KAKAO',
                 token: res.data['access_token'],
               });
             });
         })
         .catch(() => {
-          navigation.replace(AuthNavigations.AuthHome);
+          navigation.replace(AuthNavigations.Home);
         });
     }
   }, []);
