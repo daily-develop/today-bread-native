@@ -10,7 +10,7 @@ import {
 } from '@/navigations/stack/root/index';
 
 import AuthStackNavigator from '@/navigations/stack/auth/AuthStackNavigator';
-import HomeScreen from '@/screens/home/HomeScreen';
+import MainBottomTabNavigator from '@/navigations/tab/main/MainBottomTabNavigator';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -21,7 +21,10 @@ const RootStackNavigator: React.FC = () => {
         name={RootNavigations.Auth}
         component={AuthStackNavigator}
       />
-      <Stack.Screen name={RootNavigations.Main} component={HomeScreen} />
+      <Stack.Screen
+        name={RootNavigations.Main}
+        component={MainBottomTabNavigator}
+      />
     </Stack.Navigator>
   );
 };
