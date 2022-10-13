@@ -8,7 +8,7 @@ export type Data = Record<'signUp', Token>;
 export interface Variables {
   type: 'KAKAO' | 'NAVER';
   token: string;
-  nickname: string;
+  name: string;
   email: string;
   phone: string;
   address: string;
@@ -17,9 +17,9 @@ export interface Variables {
 
 export const SIGN_UP_GQL = gql`
   mutation signUp(
-    $type: String!
+    $type: AuthType!
     $token: String!
-    $nickname: String!
+    $name: String!
     $email: String!
     $phone: String!
     $address: String!
@@ -29,7 +29,7 @@ export const SIGN_UP_GQL = gql`
       request: {
         type: $type
         token: $token
-        nickname: $nickname
+        name: $name
         email: $email
         phone: $phone
         address: $address

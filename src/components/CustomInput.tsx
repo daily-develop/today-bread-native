@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -33,8 +33,25 @@ const CustomInput: React.FC<CustomInputProps> = ({
   inputStyle,
   props,
 }) => {
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  const borderColorStyle = useMemo<StyleProp<TextStyle>>(
+    () => ({
+      borderBottomColor: isFocused ? Colors.primary : Colors.gray,
+    }),
+    [isFocused]
+  );
+
   const handleOnChangeText = useCallback((text: string) => {
     setText(text);
+  }, []);
+
+  const handleOnFocus = useCallback(() => {
+    setIsFocused(true);
+  }, []);
+
+  const handleOnBlur = useCallback(() => {
+    setIsFocused(false);
   }, []);
 
   return (
@@ -44,9 +61,11 @@ const CustomInput: React.FC<CustomInputProps> = ({
       </Conditional>
 
       <TextInput
-        style={[styles.input, inputStyle]}
+        style={[styles.input, borderColorStyle, inputStyle]}
         value={text}
         onChangeText={handleOnChangeText}
+        onFocus={handleOnFocus}
+        onBlur={handleOnBlur}
         selectionColor={Colors.primary}
         {...props}
       />
@@ -70,7 +89,6 @@ const styles = StyleSheet.create({
     color: Colors.black,
     paddingVertical: 8,
     borderBottomWidth: 2,
-    borderBottomColor: Colors.gray,
   },
 });
 

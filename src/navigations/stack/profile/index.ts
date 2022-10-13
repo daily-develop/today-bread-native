@@ -7,10 +7,12 @@ import {
 
 export enum ProfileNavigations {
   Home = 'ProfileHome',
+  CreateStore = 'ProfileCreateStore',
 }
 
 export type ProfileStackParamList = {
   [ProfileNavigations.Home]: undefined;
+  [ProfileNavigations.CreateStore]: undefined;
 };
 
 export type ProfileStackParamProps<T extends ProfileNavigations> =
