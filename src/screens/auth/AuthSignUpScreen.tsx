@@ -1,6 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { StackNavigationOptions } from '@react-navigation/stack';
+import {
+  CardStyleInterpolators,
+  StackNavigationOptions,
+} from '@react-navigation/stack';
 import { Feather, Ionicons } from '@expo/vector-icons';
 
 import { Colors } from '@/constants/color';
@@ -12,20 +15,55 @@ import CustomInput from '@/components/CustomInput';
 import SizedBox from '@/components/SizedBox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+import { AuthNavigations, AuthStackParamProps } from '@/navigations/stack/auth';
+import { SIGN_UP } from '@/operations/auth/mutation/SignUp';
+import { generateRNFile } from '@/utils/generateFile';
+import { tokenVar } from '@/stores/auth';
+import tokenRepository from '@/repository/token.repository';
+
 export const AuthSignUpScreenOptions: StackNavigationOptions = {
   headerTitle: '',
+  cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
 };
 
-interface AuthSignUpScreenProps {}
+interface AuthSignUpScreenProps {
+  route: AuthStackParamProps<AuthNavigations.SignUp>['route'];
+}
 
-const AuthSignUpScreen: React.FC<AuthSignUpScreenProps> = ({}) => {
+const AuthSignUpScreen: React.FC<AuthSignUpScreenProps> = ({ route }) => {
+  const [signUp] = SIGN_UP();
+
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [address, setAddress] = useState<string>('');
 
-  const handleSubmit = useCallback(() => {}, []);
+  const buttonDisabled = useMemo<boolean>(
+    () =>
+      name.trim().length === 0 ||
+      email.trim().length === 0 ||
+      phone.trim().length === 0 ||
+      address.trim().length === 0,
+    [name, email, phone, address]
+  );
+
+  const handleSubmit = useCallback(async () => {
+    signUp({
+      variables: {
+        type: route.params.type,
+        token: route.params.token,
+        nickname: name.trim(),
+        email: email.trim(),
+        phone: phone.trim().replaceAll('-', ''),
+        address: address.trim(),
+        profileImage: await generateRNFile(profileImage),
+      },
+    }).then((res) => {
+      tokenRepository.set(res.data.signUp);
+      tokenVar(res.data.signUp);
+    });
+  }, [route, profileImage, name, email, phone, address]);
 
   return (
     <SafeAreaView style={styles.safeContainer}>
@@ -84,7 +122,11 @@ const AuthSignUpScreen: React.FC<AuthSignUpScreenProps> = ({}) => {
           <CustomInput title="주소" text={address} setText={setAddress} />
         </KeyboardAwareScrollView>
 
-        <CustomButton label="완료" onPress={handleSubmit} />
+        <CustomButton
+          label="완료"
+          onPress={handleSubmit}
+          disabled={buttonDisabled}
+        />
       </View>
     </SafeAreaView>
   );

@@ -13,6 +13,9 @@ import AuthHomeScreen, {
 import AuthSignUpScreen, {
   AuthSignUpScreenOptions,
 } from '@/screens/auth/AuthSignUpScreen';
+import KakaoLoginScreen, {
+  KakaoLoginScreenOptions,
+} from '@/screens/auth/KakaoLoginScreen';
 
 const Stack = createStackNavigator<AuthStackParamList>();
 
@@ -20,14 +23,19 @@ const AuthStackNavigator: React.FC = () => {
   return (
     <Stack.Navigator screenOptions={stackNavigationOptions}>
       <Stack.Screen
-        name={AuthNavigations.AuthHome}
+        name={AuthNavigations.Home}
         component={AuthHomeScreen}
         options={AuthHomeScreenOptions}
       />
       <Stack.Screen
-        name={AuthNavigations.AuthSignUp}
+        name={AuthNavigations.SignUp}
         component={AuthSignUpScreen}
         options={AuthSignUpScreenOptions}
+      />
+      <Stack.Screen
+        name={AuthNavigations.KakaoLogin}
+        component={KakaoLoginScreen}
+        options={KakaoLoginScreenOptions}
       />
     </Stack.Navigator>
   );
