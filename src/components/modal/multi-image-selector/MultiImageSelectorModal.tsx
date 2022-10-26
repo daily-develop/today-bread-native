@@ -24,12 +24,16 @@ interface MultiImageSelectorModalProps {
   children: JSX.Element;
   assets: MediaLibrary.Asset[];
   setAssets: React.Dispatch<React.SetStateAction<MediaLibrary.Asset[]>>;
+  maxAssets?: number;
+  disable?: boolean;
 }
 
 const MultiImageSelectorModal: React.FC<MultiImageSelectorModalProps> = ({
   children,
   assets,
   setAssets,
+  maxAssets,
+  disable = false,
 }) => {
   const [status, requestPermission] = MediaLibrary.usePermissions();
 
@@ -98,12 +102,14 @@ const MultiImageSelectorModal: React.FC<MultiImageSelectorModalProps> = ({
       setSelected((prev) => {
         if (prev.map((it) => it.uri).includes(asset.uri)) {
           return prev.filter((it) => it.uri !== asset.uri);
-        } else {
+        } else if (maxAssets === undefined || prev.length < maxAssets) {
           return [...prev, asset];
+        } else {
+          return prev;
         }
       });
     },
-    [setSelected]
+    [setSelected, maxAssets]
   );
 
   const keyExtractor = useCallback((_, index: number) => `image:${index}`, []);
@@ -146,7 +152,11 @@ const MultiImageSelectorModal: React.FC<MultiImageSelectorModalProps> = ({
 
   return (
     <>
-      <TouchableOpacity onPress={handleOnOpenModal} activeOpacity={0.65}>
+      <TouchableOpacity
+        onPress={handleOnOpenModal}
+        activeOpacity={0.65}
+        disabled={disable}
+      >
         {children}
       </TouchableOpacity>
 

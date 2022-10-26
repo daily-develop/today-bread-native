@@ -1,8 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
-  FlatList,
   Image,
-  ListRenderItem,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -14,13 +12,21 @@ import { StackNavigationOptions } from '@react-navigation/stack';
 import * as MediaLibrary from 'expo-media-library';
 import { PhotoIcon } from 'react-native-heroicons/mini';
 
+import {
+  ProfileNavigations,
+  ProfileStackParamProps,
+} from '@/navigations/stack/profile';
 import { Colors } from '@/constants/color';
+
 import CustomInput from '@/components/CustomInput';
 import SizedBox from '@/components/SizedBox';
-import Conditional from '@/hocs/Conditional';
 import CustomButton from '@/components/CustomButton';
 import MultiImageSelectorModal from '@/components/modal/multi-image-selector/MultiImageSelectorModal';
+import Conditional from '@/hocs/Conditional';
 import { mainBottomNavigationVisibleVar } from '@/stores/common';
+
+import { CREATE_STORE } from '@/operations/store/mutation/CreateStore';
+import { generateRNFile } from '@/utils/generateFile';
 
 export const CreateStoreScreenOptions: StackNavigationOptions = {
   headerTitle: '가게 등록',
@@ -31,12 +37,18 @@ export const CreateStoreScreenOptions: StackNavigationOptions = {
   },
 };
 
-interface CreateStoreScreenProps {}
+interface CreateStoreScreenProps {
+  navigation: ProfileStackParamProps<ProfileNavigations.CreateStore>['navigation'];
+}
 
-const CreateStoreScreen: React.FC<CreateStoreScreenProps> = ({}) => {
+const CreateStoreScreen: React.FC<CreateStoreScreenProps> = ({
+  navigation,
+}) => {
   useFocusEffect(() => {
     mainBottomNavigationVisibleVar(false);
   });
+
+  const [createStore] = CREATE_STORE();
 
   const [nickname, setNickname] = useState<string>('');
   const [storeName, setStoreName] = useState<string>('');
@@ -46,32 +58,72 @@ const CreateStoreScreen: React.FC<CreateStoreScreenProps> = ({}) => {
   const [assets, setAssets] = useState<MediaLibrary.Asset[]>([]);
   const [cycle, setCycle] = useState<string>('');
 
-  const imageKeyExtractor = useCallback(
-    (item: MediaLibrary.Asset) => item.id,
-    []
+  const buttonDisabled = useMemo<boolean>(
+    () =>
+      storeName.trim().length === 0 ||
+      assets.length !== 1 ||
+      description.trim().length === 0 ||
+      address.trim().length === 0 ||
+      phone.trim().length === 0 ||
+      nickname.trim().length === 0,
+    [storeName, assets, description, address, phone, nickname]
   );
 
-  const renderImage = useCallback<ListRenderItem<MediaLibrary.Asset>>(
-    ({ item }) => <Image style={styles.image} source={{ uri: item.uri }} />,
-    []
-  );
+  const handleButtonOnPress = useCallback(async () => {
+    await createStore({
+      variables: {
+        name: storeName,
+        image: await generateRNFile(assets[0]),
+        description,
+        location: address,
+        phone,
+        manager: {
+          nickname,
+        },
+      },
+    });
 
-  const listFooterComponent = useCallback(
-    () => (
-      <MultiImageSelectorModal assets={assets} setAssets={setAssets}>
-        <View style={styles.imageFooterContainer}>
-          <PhotoIcon size={26} color={Colors.darkGray} />
-        </View>
-      </MultiImageSelectorModal>
-    ),
-    [assets, setAssets]
-  );
-
-  const handleButtonOnPress = useCallback(() => {}, []);
+    navigation.goBack();
+  }, [
+    navigation,
+    createStore,
+    storeName,
+    assets,
+    description,
+    address,
+    phone,
+    nickname,
+  ]);
 
   return (
     <SafeAreaView style={styles.safeContainer}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.title}>대표 사진</Text>
+        <SizedBox height={10} />
+
+        <MultiImageSelectorModal
+          assets={assets}
+          setAssets={setAssets}
+          maxAssets={1}
+        >
+          <>
+            <Conditional condition={assets.length === 0}>
+              <View style={styles.unSelectedImageContainer}>
+                <PhotoIcon size={26} color={Colors.darkGray} />
+              </View>
+            </Conditional>
+
+            <Conditional condition={assets.length > 0}>
+              <Image style={styles.image} source={{ uri: assets[0]?.uri }} />
+            </Conditional>
+          </>
+        </MultiImageSelectorModal>
+
+        <SizedBox height={26} />
+
         <CustomInput
           title="사장님 닉네임"
           titleStyle={styles.title}
@@ -122,30 +174,6 @@ const CreateStoreScreen: React.FC<CreateStoreScreenProps> = ({}) => {
 
         <SizedBox height={26} />
 
-        <Text style={styles.title}>가게 사진</Text>
-        <SizedBox height={10} />
-
-        <Conditional condition={assets.length === 0}>
-          <MultiImageSelectorModal assets={assets} setAssets={setAssets}>
-            <View style={styles.unSelectedImageContainer}>
-              <PhotoIcon size={26} color={Colors.darkGray} />
-            </View>
-          </MultiImageSelectorModal>
-        </Conditional>
-
-        <Conditional condition={assets.length > 0}>
-          <FlatList
-            data={assets}
-            keyExtractor={imageKeyExtractor}
-            renderItem={renderImage}
-            ListFooterComponent={listFooterComponent}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-          />
-        </Conditional>
-
-        <SizedBox height={26} />
-
         <CustomInput
           title="배송 주기"
           titleStyle={styles.title}
@@ -156,7 +184,11 @@ const CreateStoreScreen: React.FC<CreateStoreScreenProps> = ({}) => {
 
         <SizedBox height={40} />
 
-        <CustomButton label="완료" onPress={handleButtonOnPress} />
+        <CustomButton
+          label="완료"
+          onPress={handleButtonOnPress}
+          disabled={buttonDisabled}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -182,7 +214,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   unSelectedImageContainer: {
-    width: '100%',
+    width: 140,
     height: 140,
     borderRadius: 6,
     alignItems: 'center',
@@ -193,16 +225,6 @@ const styles = StyleSheet.create({
     width: 140,
     height: 140,
     borderRadius: 6,
-    marginLeft: 10,
-  },
-  imageFooterContainer: {
-    width: 140,
-    height: 140,
-    borderRadius: 6,
-    marginLeft: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.lightGray,
   },
 });
 

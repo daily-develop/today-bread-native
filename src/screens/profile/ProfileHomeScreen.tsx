@@ -17,6 +17,7 @@ import { Colors } from '@/constants/color';
 import { mainBottomNavigationVisibleVar } from '@/stores/common';
 
 import ProfileHomeHeader from '@/screens/profile/component/header/ProfileHomeHeader';
+import ManagedStoreList from '@/screens/profile/component/ManagedStoreList';
 
 export const ProfileHomeScreenOptions: StackNavigationOptions = {
   header: () => <ProfileHomeHeader />,
@@ -52,6 +53,8 @@ const ProfileHomeScreen: React.FC<ProfileHomeScreenProps> = ({
         >
           <Text style={styles.title}>가게 등록</Text>
         </TouchableOpacity>
+
+        <ManagedStoreList />
       </ScrollView>
     </SafeAreaView>
   );
