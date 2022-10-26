@@ -3,8 +3,13 @@ import { ReactNativeFile } from 'apollo-upload-client';
 
 import { STORE_RESPONSE_GQL } from '@/operations/store';
 import { Store } from '@/domain/store';
+import {
+  Data as GetManagedStoreData,
+  GET_MANAGED_STORE_GQL,
+  Variable as GetManagedStoreVariable,
+} from '@/operations/store/query/GetManagedStore';
 
-export type Data = Record<'me', Store>;
+export type Data = Record<'createStore', Store>;
 
 export interface Variables {
   image: ReactNativeFile;
@@ -43,4 +48,16 @@ export const CREATE_STORE_GQL = gql`
 `;
 
 export const CREATE_STORE = (options?: MutationHookOptions<Data, Variables>) =>
-  useMutation<Data, Variables>(CREATE_STORE_GQL, { ...options });
+  useMutation<Data, Variables>(CREATE_STORE_GQL, {
+    update: (cache, { data }) => {
+      if (!data) return;
+
+      cache.updateQuery<GetManagedStoreData, GetManagedStoreVariable>(
+        { query: GET_MANAGED_STORE_GQL },
+        (prev) => ({
+          managedStore: [...prev.managedStore, data.createStore],
+        })
+      );
+    },
+    ...options,
+  });

@@ -15,6 +15,9 @@ import ProfileHomeScreen, {
 import CreateStoreScreen, {
   CreateStoreScreenOptions,
 } from '@/screens/profile/CreateStoreScreen';
+import StoreDetailStackNavigator, {
+  StoreDetailStackNavigatorOptions,
+} from '@/navigations/stack/store/StoreDetailStackNavigator';
 
 export const ProfileStackNavigatorOptions: BottomTabNavigationOptions = {
   tabBarIcon: ({ size, color }) => {
@@ -39,6 +42,11 @@ const ProfileStackNavigator: React.FC = () => {
         name={ProfileNavigations.CreateStore}
         component={CreateStoreScreen}
         options={CreateStoreScreenOptions}
+      />
+      <Stack.Screen
+        name={ProfileNavigations.Store}
+        component={StoreDetailStackNavigator}
+        options={StoreDetailStackNavigatorOptions}
       />
     </Stack.Navigator>
   );

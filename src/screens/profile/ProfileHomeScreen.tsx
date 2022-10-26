@@ -45,7 +45,7 @@ const ProfileHomeScreen: React.FC<ProfileHomeScreenProps> = ({
 
   return (
     <SafeAreaView style={styles.safeContainer}>
-      <ScrollView bounces={false}>
+      <ScrollView bounces={false} nestedScrollEnabled={true}>
         <TouchableOpacity
           style={styles.menuContainer}
           onPress={handleMenu(ProfileNavigations.CreateStore)}

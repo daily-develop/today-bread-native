@@ -64,7 +64,7 @@ const CreateStoreScreen: React.FC<CreateStoreScreenProps> = ({
       assets.length !== 1 ||
       description.trim().length === 0 ||
       address.trim().length === 0 ||
-      phone.trim().length === 0 ||
+      phone.replaceAll('-', '').trim().length === 0 ||
       nickname.trim().length === 0,
     [storeName, assets, description, address, phone, nickname]
   );
@@ -72,13 +72,13 @@ const CreateStoreScreen: React.FC<CreateStoreScreenProps> = ({
   const handleButtonOnPress = useCallback(async () => {
     await createStore({
       variables: {
-        name: storeName,
+        name: storeName.trim(),
         image: await generateRNFile(assets[0]),
-        description,
-        location: address,
-        phone,
+        description: description.trim(),
+        location: address.trim(),
+        phone: phone.replaceAll('-', '').trim(),
         manager: {
-          nickname,
+          nickname: nickname.trim(),
         },
       },
     });

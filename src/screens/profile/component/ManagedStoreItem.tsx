@@ -1,27 +1,43 @@
-import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 
 import { Store } from '@/domain/store';
 import { Colors } from '@/constants/color';
+import {
+  ProfileNavigations,
+  ProfileStackParamProps,
+} from '@/navigations/stack/profile';
+
+type navigationProp =
+  ProfileStackParamProps<ProfileNavigations.Home>['navigation'];
 
 interface ManagedStoreItemProps {
   store: Store;
 }
 
 const ManagedStoreItem: React.FC<ManagedStoreItemProps> = ({ store }) => {
+  const navigation = useNavigation<navigationProp>();
+
+  const handleStoreDetail = useCallback(async () => {
+    await navigation.push(ProfileNavigations.Store, { storeId: store.id });
+  }, [navigation, store]);
+
   return (
     <View style={styles.container}>
-      <View style={styles.topContainer}>
-        <Image style={styles.storeImage} source={{ uri: store.image.url }} />
+      <TouchableOpacity onPress={handleStoreDetail} activeOpacity={0.65}>
+        <View style={styles.topContainer}>
+          <Image style={styles.storeImage} source={{ uri: store.image.url }} />
 
-        <View style={styles.infoContainer}>
-          <Text style={styles.storeName}>{store.name}</Text>
-          <Text style={styles.mangerNickname}>{store.manager.nickname}</Text>
+          <View style={styles.infoContainer}>
+            <Text style={styles.storeName}>{store.name}</Text>
+            <Text style={styles.mangerNickname}>{store.manager.nickname}</Text>
+          </View>
+
+          <AntDesign name="right" size={22} color={Colors.black} />
         </View>
-
-        <AntDesign name="right" size={22} color={Colors.black} />
-      </View>
+      </TouchableOpacity>
 
       <View style={styles.bottomContainer}>
         <View style={styles.buttonContainer}>
@@ -45,14 +61,14 @@ const ManagedStoreItem: React.FC<ManagedStoreItemProps> = ({ store }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 20,
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: Colors.lightGray,
   },
   topContainer: {
-    paddingHorizontal: 10,
-    marginBottom: 20,
     flexDirection: 'row',
+    padding: 10,
+    marginBottom: 20,
     alignItems: 'center',
   },
   storeImage: {

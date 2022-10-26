@@ -1,5 +1,6 @@
 import { Store } from '@/domain/store';
 import { gql, LazyQueryHookOptions, useLazyQuery } from '@apollo/client';
+
 import { STORE_RESPONSE_GQL } from '@/operations/store';
 
 export type Data = Record<'managedStore', Store[]>;
