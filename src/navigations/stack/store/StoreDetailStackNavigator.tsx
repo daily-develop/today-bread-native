@@ -15,6 +15,9 @@ import { stackNavigationOptions } from '@/constants/navigation.options';
 import StoreDetailHomeScreen, {
   StoreDetailHomeScreenOptions,
 } from '@/screens/store/detail/StoreDetailHomeScreen';
+import StorePackageRegistrationScreen, {
+  StorePackageRegistrationScreenOptions,
+} from '@/screens/store/StorePackageRegistrationScreen';
 
 type routeProp =
   StoreDetailStackParamProps<StoreDetailNavigations.Home>['route'];
@@ -37,6 +40,12 @@ const StoreDetailStackNavigator: React.FC = () => {
         name={StoreDetailNavigations.Home}
         component={StoreDetailHomeScreen}
         options={StoreDetailHomeScreenOptions}
+        initialParams={{ storeId: route.params?.storeId ?? undefined }}
+      />
+      <Stack.Screen
+        name={StoreDetailNavigations.PackageRegistration}
+        component={StorePackageRegistrationScreen}
+        options={StorePackageRegistrationScreenOptions}
         initialParams={{ storeId: route.params?.storeId ?? undefined }}
       />
     </Stack.Navigator>

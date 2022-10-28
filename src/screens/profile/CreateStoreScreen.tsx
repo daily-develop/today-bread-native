@@ -1,16 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { StackNavigationOptions } from '@react-navigation/stack';
 import * as MediaLibrary from 'expo-media-library';
 import { PhotoIcon } from 'react-native-heroicons/mini';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import {
   ProfileNavigations,
@@ -97,7 +91,7 @@ const CreateStoreScreen: React.FC<CreateStoreScreenProps> = ({
 
   return (
     <SafeAreaView style={styles.safeContainer}>
-      <ScrollView
+      <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
@@ -189,7 +183,7 @@ const CreateStoreScreen: React.FC<CreateStoreScreenProps> = ({
           onPress={handleButtonOnPress}
           disabled={buttonDisabled}
         />
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

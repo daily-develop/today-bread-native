@@ -24,10 +24,12 @@ export type StoreStackParamProps<T extends StoreNavigations> =
 /* Store Detail */
 export enum StoreDetailNavigations {
   Home = 'StoreDetailHome',
+  PackageRegistration = 'StorePackageRegistration',
 }
 
 export type StoreDetailStackParamList = {
   [StoreDetailNavigations.Home]: { storeId: string };
+  [StoreDetailNavigations.PackageRegistration]: { storeId: string };
 };
 
 export type StoreDetailStackParamProps<T extends StoreDetailNavigations> =
