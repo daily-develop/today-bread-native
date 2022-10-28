@@ -1,11 +1,12 @@
-import React from 'react';
-import { RouteProp } from '@react-navigation/native';
+import React, { useMemo } from 'react';
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
+import { useReactiveVar } from '@apollo/client';
 
 import { Colors } from '@/constants/color';
+import { mainBottomNavigationVisibleVar } from '@/stores/common';
 import {
   MainBottomTabParamList,
   MainNavigations,
@@ -27,9 +28,23 @@ import ProfileStackNavigator, {
 const Tab = createBottomTabNavigator<MainBottomTabParamList>();
 
 const MainBottomTabNavigator: React.FC = () => {
+  const mainBottomNavigationVisible = useReactiveVar<boolean>(
+    mainBottomNavigationVisibleVar
+  );
+
+  const dynamicScreenOptions = useMemo<BottomTabNavigationOptions>(
+    () => ({
+      ...screenOptions,
+      tabBarStyle: {
+        display: mainBottomNavigationVisible ? 'flex' : 'none',
+      },
+    }),
+    [mainBottomNavigationVisible]
+  );
+
   return (
     <Tab.Navigator
-      screenOptions={screenOptions}
+      screenOptions={dynamicScreenOptions}
       initialRouteName={MainNavigations.Home}
     >
       <Tab.Screen
@@ -56,16 +71,11 @@ const MainBottomTabNavigator: React.FC = () => {
   );
 };
 
-const screenOptions = ({
-  route,
-}: {
-  route: RouteProp<MainBottomTabParamList, MainNavigations.Home>;
-  navigation: any;
-}): BottomTabNavigationOptions => ({
+const screenOptions: BottomTabNavigationOptions = {
   headerShown: false,
   tabBarShowLabel: false,
   tabBarActiveTintColor: Colors.primary,
   tabBarInactiveTintColor: Colors.inactive,
-});
+};
 
 export default MainBottomTabNavigator;

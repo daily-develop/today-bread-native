@@ -22,9 +22,13 @@ const Main: React.FC = () => {
         if (token !== null) {
           reissue({
             variables: token,
-          }).then(({ data }) => {
-            tokenVar(data.reissue);
-          });
+          })
+            .then(({ data }) => {
+              tokenVar(data.reissue);
+            })
+            .catch(() => {
+              TokenRepository.set(null);
+            });
         } else {
           if (navigation.getState().routes[0]?.name !== RootNavigations.Auth) {
             navigation.dispatch(

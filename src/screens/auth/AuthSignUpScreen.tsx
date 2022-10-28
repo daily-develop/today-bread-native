@@ -53,7 +53,7 @@ const AuthSignUpScreen: React.FC<AuthSignUpScreenProps> = ({ route }) => {
       variables: {
         type: route.params.type,
         token: route.params.token,
-        nickname: name.trim(),
+        name: name.trim(),
         email: email.trim(),
         phone: phone.trim().replaceAll('-', ''),
         address: address.trim(),

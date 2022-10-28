@@ -12,6 +12,12 @@ export const stackNavigationOptions: StackNavigationOptions = {
       ios: 12,
     }),
   },
+  headerRightContainerStyle: {
+    paddingRight: Platform.select({
+      android: 0,
+      ios: 12,
+    }),
+  },
   headerTitleStyle: {
     fontWeight: '700',
     fontSize: 20,

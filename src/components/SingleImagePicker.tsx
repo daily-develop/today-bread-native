@@ -39,7 +39,7 @@ const SingleImagePicker: React.FC<SingleImagePickerProps> = ({
     });
 
     if (!result.cancelled) {
-      setImage(result.uri);
+      setImage(result['uri']);
     }
   }, [status]);
 

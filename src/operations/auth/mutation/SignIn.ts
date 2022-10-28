@@ -10,7 +10,7 @@ export interface Variables {
 }
 
 export const SIGN_IN_GQL = gql`
-  mutation signIn($type: String!, $token: String!) {
+  mutation signIn($type: AuthType!, $token: String!) {
     signIn(request: { type: $type, token: $token }) {
       accessToken
       refreshToken
