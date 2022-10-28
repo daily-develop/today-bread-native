@@ -36,6 +36,16 @@ const ManagedStoreItem: React.FC<ManagedStoreItemProps> = ({ store }) => {
     );
   }, [navigation, store]);
 
+  const handlePackageList = useCallback(() => {
+    navigation.dispatch(
+      CommonActions.navigate(ProfileNavigations.Store, {
+        storeId: store.id,
+        initial: true,
+        screen: StoreDetailNavigations.ProductList,
+      })
+    );
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleStoreDetail} activeOpacity={0.65}>
@@ -66,10 +76,14 @@ const ManagedStoreItem: React.FC<ManagedStoreItemProps> = ({ store }) => {
           <Text style={styles.buttonActionText}>등록</Text>
         </TouchableOpacity>
 
-        <View style={[styles.buttonContainer, styles.buttonBorder]}>
+        <TouchableOpacity
+          style={[styles.buttonContainer, styles.buttonBorder]}
+          onPress={handlePackageList}
+          activeOpacity={0.65}
+        >
           <Text style={styles.buttonText}>패키지</Text>
           <Text style={styles.buttonActionText}>조회</Text>
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>패키지</Text>

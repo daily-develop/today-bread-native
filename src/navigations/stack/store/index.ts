@@ -25,11 +25,13 @@ export type StoreStackParamProps<T extends StoreNavigations> =
 export enum StoreDetailNavigations {
   Home = 'StoreDetailHome',
   PackageRegistration = 'StorePackageRegistration',
+  ProductList = 'StoreProductList',
 }
 
 export type StoreDetailStackParamList = {
   [StoreDetailNavigations.Home]: { storeId: string };
   [StoreDetailNavigations.PackageRegistration]: { storeId: string };
+  [StoreDetailNavigations.ProductList]: { storeId: string };
 };
 
 export type StoreDetailStackParamProps<T extends StoreDetailNavigations> =
