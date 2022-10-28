@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { StackNavigationOptions } from '@react-navigation/stack';
 import { Feather, Ionicons } from '@expo/vector-icons';
@@ -15,9 +15,15 @@ import { Store } from '@/domain/store';
 import { GET_STORE } from '@/operations/store/query/GetStore';
 import Conditional from '@/hocs/Conditional';
 import { toPhoneNumber } from '@/utils/toPhoneNumber';
+import CustomImage from '@/components/CustomImage';
 
 export const StoreDetailHomeScreenOptions: StackNavigationOptions = {
   title: '',
+  headerStyle: {
+    elevation: 0,
+    shadowColor: 'transparent',
+    backgroundColor: Colors.lightGray,
+  },
 };
 
 interface StoreDetailHomeScreenProps {
@@ -55,9 +61,11 @@ const StoreDetailHomeScreen: React.FC<StoreDetailHomeScreenProps> = ({
         <View style={styles.container}>
           <View style={styles.infoContainer}>
             <View style={styles.storeImageContainer}>
-              <Image
+              <CustomImage
                 style={styles.storeImage}
-                source={{ uri: store?.image?.url }}
+                width={126}
+                height={126}
+                imageUrl={store?.image?.url}
               />
             </View>
 
@@ -100,8 +108,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   storeImage: {
-    width: 126,
-    height: 126,
     borderRadius: 20,
   },
   description: {

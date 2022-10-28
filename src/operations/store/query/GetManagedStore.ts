@@ -1,17 +1,17 @@
 import { Store } from '@/domain/store';
 import { gql, LazyQueryHookOptions, useLazyQuery } from '@apollo/client';
 
-import { STORE_RESPONSE_GQL } from '@/operations/store';
+import { STORE_FRAGMENT_GQL } from '@/operations/store/fragment';
 
 export type Data = Record<'managedStore', Store[]>;
 
 export interface Variable {}
 
 export const GET_MANAGED_STORE_GQL = gql`
-  ${STORE_RESPONSE_GQL}
+  ${STORE_FRAGMENT_GQL}
   query managedStore {
     managedStore {
-      ...StoreResponseField
+      ...StoreFragment
     }
   }
 `;

@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -9,6 +9,7 @@ import {
   ProfileNavigations,
   ProfileStackParamProps,
 } from '@/navigations/stack/profile';
+import CustomImage from '@/components/CustomImage';
 
 type navigationProp =
   ProfileStackParamProps<ProfileNavigations.Home>['navigation'];
@@ -28,7 +29,12 @@ const ManagedStoreItem: React.FC<ManagedStoreItemProps> = ({ store }) => {
     <View style={styles.container}>
       <TouchableOpacity onPress={handleStoreDetail} activeOpacity={0.65}>
         <View style={styles.topContainer}>
-          <Image style={styles.storeImage} source={{ uri: store.image.url }} />
+          <CustomImage
+            style={styles.storeImage}
+            width={80}
+            height={80}
+            imageUrl={store.image.url}
+          />
 
           <View style={styles.infoContainer}>
             <Text style={styles.storeName}>{store.name}</Text>
@@ -72,8 +78,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   storeImage: {
-    width: 80,
-    height: 80,
     borderRadius: 5,
   },
   infoContainer: {

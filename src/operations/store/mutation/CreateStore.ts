@@ -1,7 +1,7 @@
 import { gql, MutationHookOptions, useMutation } from '@apollo/client';
 import { ReactNativeFile } from 'apollo-upload-client';
 
-import { STORE_RESPONSE_GQL } from '@/operations/store';
+import { STORE_FRAGMENT_GQL } from '@/operations/store/fragment';
 import { Store } from '@/domain/store';
 import {
   Data as GetManagedStoreData,
@@ -23,7 +23,7 @@ export interface Variables {
 }
 
 export const CREATE_STORE_GQL = gql`
-  ${STORE_RESPONSE_GQL}
+  ${STORE_FRAGMENT_GQL}
   mutation createStore(
     $image: Upload
     $name: String!
@@ -42,7 +42,7 @@ export const CREATE_STORE_GQL = gql`
         manager: $manager
       }
     ) {
-      ...StoreResponseField
+      ...StoreFragment
     }
   }
 `;

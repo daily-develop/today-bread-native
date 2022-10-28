@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export const STORE_RESPONSE_GQL = gql`
-  fragment StoreResponseField on StoreResponse {
+export const STORE_FRAGMENT_GQL = gql`
+  fragment StoreFragment on Store {
     id
     createdAt
     updatedAt
