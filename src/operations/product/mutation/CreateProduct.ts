@@ -3,6 +3,11 @@ import { ReactNativeFile } from 'apollo-upload-client';
 
 import { BreadType, Product } from '@/domain/product';
 import { PRODUCT_FRAGMENT_GQL } from '@/operations/product/fragment';
+import {
+  Data as GetProductsData,
+  GET_PRODUCTS_GQL,
+  Variable as GetProductsVariable,
+} from '@/operations/product/query/GetProducts';
 
 export type Data = Record<'createProduct', Product>;
 export interface Variable {
@@ -43,4 +48,21 @@ export const CREATE_PRODUCT_GQL = gql`
 `;
 
 export const CREATE_PRODUCT = (options?: MutationHookOptions<Data, Variable>) =>
-  useMutation<Data, Variable>(CREATE_PRODUCT_GQL, { ...options });
+  useMutation<Data, Variable>(CREATE_PRODUCT_GQL, {
+    update: (cache, { data }) => {
+      if (!data) return;
+
+      cache.updateQuery<GetProductsData, GetProductsVariable>(
+        {
+          query: GET_PRODUCTS_GQL,
+          variables: {
+            storeId: data.createProduct.store.id,
+          },
+        },
+        (prev) => ({
+          products: [data.createProduct, ...prev.products],
+        })
+      );
+    },
+    ...options,
+  });

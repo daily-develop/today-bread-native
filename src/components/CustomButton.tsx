@@ -14,7 +14,7 @@ import { Colors } from '@/constants/color';
 
 interface CustomButtonProps {
   label: string;
-  onPress: (event: GestureResponderEvent) => void;
+  onPress?: (event: GestureResponderEvent) => void;
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
@@ -22,7 +22,7 @@ interface CustomButtonProps {
 
 const CustomButton: React.FC<CustomButtonProps> = ({
   label,
-  onPress,
+  onPress = () => {},
   disabled = false,
   style,
   labelStyle,
@@ -35,7 +35,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   );
 
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.65}>
+    <TouchableOpacity onPress={onPress} activeOpacity={disabled ? 1 : 0.65}>
       <View style={[styles.container, buttonColor, style]}>
         <Text style={[styles.label, labelStyle]}>{label}</Text>
       </View>
