@@ -1,5 +1,12 @@
-import React, { useEffect, useMemo } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import {
+  FlatList,
+  ListRenderItem,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { StackNavigationOptions } from '@react-navigation/stack';
 import { Feather, Ionicons } from '@expo/vector-icons';
@@ -16,6 +23,9 @@ import { GET_STORE } from '@/operations/store/query/GetStore';
 import Conditional from '@/hocs/Conditional';
 import { toPhoneNumber } from '@/utils/toPhoneNumber';
 import CustomImage from '@/components/CustomImage';
+import { GET_PRODUCTS } from '@/operations/product/query/GetProducts';
+import { Product } from '@/domain/product';
+import StoreDetailProductItem from '@/screens/store/detail/components/StoreDetailProductItem';
 
 export const StoreDetailHomeScreenOptions: StackNavigationOptions = {
   title: '',
@@ -39,12 +49,22 @@ const StoreDetailHomeScreen: React.FC<StoreDetailHomeScreenProps> = ({
     mainBottomNavigationVisibleVar(false);
   });
 
-  const [getStore, { data }] = GET_STORE();
+  const [getStore, { data: storeData }] = GET_STORE();
+  const [getProduct, { data: productData }] = GET_PRODUCTS();
 
-  const store = useMemo<Store | null>(() => data?.store ?? null, [data]);
+  const store = useMemo<Store | null>(
+    () => storeData?.store ?? null,
+    [storeData]
+  );
+
+  const productList = useMemo<Product[]>(
+    () => productData?.products ?? [],
+    [productData]
+  );
 
   useEffect(() => {
     getStore({ variables: { storeId: route.params.storeId } });
+    getProduct({ variables: { storeId: route.params.storeId } });
   }, [route.params.storeId]);
 
   useEffect(() => {
@@ -54,6 +74,13 @@ const StoreDetailHomeScreen: React.FC<StoreDetailHomeScreenProps> = ({
       });
     }
   }, [store?.name]);
+
+  const keyExtractor = useCallback((item: Product) => item.id, []);
+
+  const renderItem = useCallback<ListRenderItem<Product>>(
+    ({ item }) => <StoreDetailProductItem product={item} />,
+    []
+  );
 
   return (
     <SafeAreaView style={styles.safeContainer}>
@@ -85,6 +112,14 @@ const StoreDetailHomeScreen: React.FC<StoreDetailHomeScreenProps> = ({
               {` ${toPhoneNumber(store?.phone ?? '')}`}
             </Text>
           </View>
+
+          <FlatList<Product>
+            data={productList}
+            keyExtractor={keyExtractor}
+            renderItem={renderItem}
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+          />
         </View>
       </Conditional>
     </SafeAreaView>
