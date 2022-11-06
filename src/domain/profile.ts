@@ -6,6 +6,8 @@ export interface Profile {
   nickname: string;
   phone: string;
   email: string;
-  address: string;
+  postcode: string;
+  address1: string;
+  address2: string;
   profileImageUrl: string;
 }

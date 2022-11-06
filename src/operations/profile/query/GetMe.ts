@@ -15,7 +15,9 @@ export const GET_ME_GQL = gql`
       name
       phone
       email
-      address
+      postcode
+      address1
+      address2
       profileImageUrl
     }
   }

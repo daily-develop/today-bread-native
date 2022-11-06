@@ -17,7 +17,8 @@ const ProfileHomeHeader: React.FC = () => {
       <View style={styles.container}>
         <View>
           <Text style={styles.name}>{me?.name ?? ''}</Text>
-          <Text style={styles.address}>{me?.address ?? ''}</Text>
+          <Text style={styles.address}>{me?.address1 ?? ''}</Text>
+          <Text style={styles.address}>{me?.address2 ?? ''}</Text>
         </View>
 
         <Conditional condition={me?.profileImageUrl === null}>
@@ -52,12 +53,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 20,
     color: Colors.primary,
+    marginBottom: 6,
   },
   address: {
     fontWeight: '600',
     fontSize: 13,
     color: Colors.black,
-    marginTop: 6,
+    marginTop: 2,
   },
   profileImage: {
     width: 72,

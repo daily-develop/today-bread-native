@@ -23,5 +23,6 @@ export const PRODUCT_FRAGMENT_GQL = gql`
     breadType
     price
     quantity
+    score
   }
 `;

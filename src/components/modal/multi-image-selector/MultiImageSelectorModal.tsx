@@ -108,7 +108,6 @@ const MultiImageSelectorModal: React.FC<MultiImageSelectorModalProps> = ({
   const selectImage = useCallback(
     (asset: MediaLibrary.Asset) => {
       setSelected((prev) => {
-        console.log(!!prev.find((it) => it.id === asset.id));
         if (!!prev.find((it) => it.id === asset.id)) {
           return prev.filter((it) => it.id !== asset.id);
         } else if (maxAssets === undefined || prev.length < maxAssets) {

@@ -26,4 +26,5 @@ export interface Product {
   breadType: BreadType;
   price: number;
   quantity?: number;
+  score: number;
 }
