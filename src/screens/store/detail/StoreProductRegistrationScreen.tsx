@@ -25,17 +25,18 @@ import { CREATE_PRODUCT } from '@/operations/product/mutation/CreateProduct';
 import { generateRNFile } from '@/utils/generateFile';
 import MultiImageSelector from '@/components/multi-image-selctor/MultiImageSelector';
 
-export const StorePackageRegistrationScreenOptions: StackNavigationOptions = {
-  title: '패키지 등록',
-};
+export const StoreProductionRegistrationScreenOptions: StackNavigationOptions =
+  {
+    title: '패키지 등록',
+  };
 
-interface StorePackageRegistrationScreenProps {
+interface StoreProductRegistrationScreenProps {
   navigation: StoreDetailStackParamProps<StoreDetailNavigations.PackageRegistration>['navigation'];
   route: StoreDetailStackParamProps<StoreDetailNavigations.PackageRegistration>['route'];
 }
 
-const StorePackageRegistrationScreen: React.FC<
-  StorePackageRegistrationScreenProps
+const StoreProductRegistrationScreen: React.FC<
+  StoreProductRegistrationScreenProps
 > = ({ navigation, route }) => {
   useFocusEffect(() => {
     mainBottomNavigationVisibleVar(false);
@@ -162,7 +163,11 @@ const StorePackageRegistrationScreen: React.FC<
           title="수량"
           titleStyle={styles.title}
           inputStyle={styles.input}
-          text={quantity}
+          text={`${
+            quantity.trim().length > 0
+              ? Number(quantity.replaceAll(',', '').trim()).toLocaleString()
+              : ''
+          }`}
           setText={setQuantity}
           props={{ keyboardType: 'number-pad' }}
         />
@@ -173,7 +178,11 @@ const StorePackageRegistrationScreen: React.FC<
           title="가격"
           titleStyle={styles.title}
           inputStyle={styles.input}
-          text={price}
+          text={
+            price.trim().length > 0
+              ? Number(price.replaceAll(',', '').trim()).toLocaleString()
+              : ''
+          }
           setText={setPrice}
           props={{ keyboardType: 'number-pad' }}
         />
@@ -255,4 +264,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StorePackageRegistrationScreen;
+export default StoreProductRegistrationScreen;
