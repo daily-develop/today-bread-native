@@ -47,8 +47,8 @@ const StoreProductDescriptionScreen: React.FC<
   const bottomPaddingStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
       paddingBottom: Platform.select({
-        android: StatusBar.currentHeight,
-        ios: getBottomSpace(),
+        android: StatusBar.currentHeight + 60,
+        ios: getBottomSpace() + 60,
       }),
     }),
     []

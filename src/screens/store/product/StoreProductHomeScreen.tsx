@@ -1,13 +1,17 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Dimensions,
   GestureResponderEvent,
   Image,
   LayoutChangeEvent,
+  Platform,
+  StatusBar,
+  StyleProp,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  ViewStyle,
 } from 'react-native';
 import { StackNavigationOptions } from '@react-navigation/stack';
 import Animated, {
@@ -28,6 +32,8 @@ import {
 
 import ProductTopTabNavigator from '@/navigations/tab/product/ProductTopTabNavigator';
 import SizedBox from '@/components/SizedBox';
+import CustomButton from '@/components/CustomButton';
+import { getBottomSpace } from 'react-native-iphone-x-helper';
 
 export const StoreProductHomeScreenOptions: StackNavigationOptions = {
   title: '',
@@ -57,6 +63,16 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
   const [headerHeight, setHeaderHeight] = useState<number | null>(null);
   const height = useSharedValue<number | null>(null);
   const [touchStarted, setTouchStarted] = useState<number>(0);
+
+  const bottomStyle = useMemo<StyleProp<ViewStyle>>(
+    () => ({
+      bottom: Platform.select({
+        android: StatusBar.currentHeight,
+        ios: getBottomSpace(),
+      }),
+    }),
+    []
+  );
 
   const headerAnimatedStyle = useAnimatedStyle(() => ({
     ...(height.value !== null
@@ -104,8 +120,10 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
     }
   }, [navigation, data?.product?.store?.id]);
 
+  const handleSubscribe = useCallback(() => {}, []);
+
   return (
-    <Animated.View style={[styles.container]}>
+    <Animated.View style={styles.container}>
       <Animated.View
         style={[styles.header, headerAnimatedStyle]}
         onLayout={handleOnLayout}
@@ -155,6 +173,14 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
       </Animated.View>
 
       <ProductTopTabNavigator productId={route.params.productId} />
+
+      <View style={[styles.subscribeButtonContainer, bottomStyle]}>
+        <CustomButton
+          style={styles.subscribeButton}
+          label="구독하기"
+          onPress={handleSubscribe}
+        />
+      </View>
     </Animated.View>
   );
 };
@@ -197,6 +223,16 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 14,
     color: Colors.black,
+  },
+  subscribeButtonContainer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    paddingHorizontal: 32,
+    alignItems: 'center',
+  },
+  subscribeButton: {
+    width: Dimensions.get('screen').width - 60,
   },
 });
 
