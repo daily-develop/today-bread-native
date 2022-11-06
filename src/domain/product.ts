@@ -22,7 +22,7 @@ export interface Product {
   store: Store;
   image?: File;
   name: string;
-  description?: string;
+  description: File[];
   breadType: BreadType;
   price: number;
   quantity?: number;

@@ -1,16 +1,8 @@
-import React, { useMemo } from 'react';
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  TextStyle,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import { Colors } from '@/constants/color';
-import Conditional from '@/hocs/Conditional';
 
 interface MultiImageSelectorModalHeaderProps {
   selected: number;
@@ -21,13 +13,6 @@ interface MultiImageSelectorModalHeaderProps {
 const MultiImageSelectorModalHeader: React.FC<
   MultiImageSelectorModalHeaderProps
 > = ({ selected, onClose, onComplete }) => {
-  const completeTextStyle = useMemo<StyleProp<TextStyle>>(
-    () => ({
-      color: selected === 0 ? Colors.lightGray : Colors.black,
-    }),
-    [selected]
-  );
-
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -46,13 +31,10 @@ const MultiImageSelectorModalHeader: React.FC<
         style={styles.completeButtonContainer}
         onPress={onComplete}
         activeOpacity={0.65}
-        disabled={selected === 0}
       >
-        <Conditional condition={selected > 0}>
-          <Text style={styles.selectedCount}>{selected}</Text>
-        </Conditional>
+        <Text style={styles.selectedCount}>{selected}</Text>
 
-        <Text style={[styles.complete, completeTextStyle]}>완료</Text>
+        <Text style={[styles.complete]}>완료</Text>
       </TouchableOpacity>
     </View>
   );

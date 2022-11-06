@@ -9,13 +9,12 @@ export interface Variable {
   storeId?: string;
   page?: number;
   take?: number;
-  search?: string;
 }
 
 export const GET_PRODUCTS_GQL = gql`
   ${PRODUCT_FRAGMENT_GQL}
-  query products($storeId: ID, $page: Int, $take: Int, $search: String) {
-    products(storeId: $storeId, page: $page, take: $take, search: $search) {
+  query products($storeId: ID, $page: Int, $take: Int) {
+    products(storeId: $storeId, page: $page, take: $take) {
       ...ProductFragment
     }
   }

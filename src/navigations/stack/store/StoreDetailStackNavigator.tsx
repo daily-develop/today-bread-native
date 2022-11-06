@@ -18,6 +18,9 @@ import StoreDetailHomeScreen, {
 import StorePackageRegistrationScreen, {
   StorePackageRegistrationScreenOptions,
 } from '@/screens/store/detail/StorePackageRegistrationScreen';
+import StoreProductHomeScreen, {
+  StoreProductHomeScreenOptions,
+} from '@/screens/store/product/StoreProductHomeScreen';
 import StoreProductListScreen, {
   StoreProductListScreenOptions,
 } from '@/screens/store/detail/StoreProductListScreen';
@@ -50,6 +53,11 @@ const StoreDetailStackNavigator: React.FC = () => {
         component={StorePackageRegistrationScreen}
         options={StorePackageRegistrationScreenOptions}
         initialParams={{ storeId: route.params?.storeId ?? undefined }}
+      />
+      <Stack.Screen
+        name={StoreDetailNavigations.Product}
+        component={StoreProductHomeScreen}
+        options={StoreProductHomeScreenOptions}
       />
       <Stack.Screen
         name={StoreDetailNavigations.ProductList}

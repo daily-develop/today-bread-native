@@ -16,7 +16,10 @@ export const PRODUCT_FRAGMENT_GQL = gql`
       url
     }
     name
-    description
+    description {
+      id
+      url
+    }
     breadType
     price
     quantity

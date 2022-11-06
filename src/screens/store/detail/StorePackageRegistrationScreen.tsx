@@ -23,6 +23,7 @@ import CustomButton from '@/components/CustomButton';
 import { BreadType } from '@/domain/product';
 import { CREATE_PRODUCT } from '@/operations/product/mutation/CreateProduct';
 import { generateRNFile } from '@/utils/generateFile';
+import MultiImageSelector from '@/components/multi-image-selctor/MultiImageSelector';
 
 export const StorePackageRegistrationScreenOptions: StackNavigationOptions = {
   title: '패키지 등록',
@@ -46,7 +47,7 @@ const StorePackageRegistrationScreen: React.FC<
   const [assets, setAssets] = useState<MediaLibrary.Asset[]>([]);
   const [breadType, setBreadType] = useState<BreadType>(BreadType.ETC);
   const [name, setName] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+  const [description, setDescription] = useState<MediaLibrary.Asset[]>([]);
   const [quantity, setQuantity] = useState<string | null>('');
   const [price, setPrice] = useState<string>('');
 
@@ -63,7 +64,9 @@ const StorePackageRegistrationScreen: React.FC<
         image: await generateRNFile(assets[0]),
         name: name.trim(),
         breadType,
-        description: description.trim(),
+        description: await Promise.all(
+          description.map(async (asset) => await generateRNFile(asset))
+        ),
         price: +price,
         quantity: isNaN(+quantity) ? null : +quantity,
       },
@@ -156,16 +159,6 @@ const StorePackageRegistrationScreen: React.FC<
         <SizedBox height={26} />
 
         <CustomInput
-          title="설명"
-          titleStyle={styles.title}
-          inputStyle={styles.input}
-          text={description}
-          setText={setDescription}
-        />
-
-        <SizedBox height={26} />
-
-        <CustomInput
           title="수량"
           titleStyle={styles.title}
           inputStyle={styles.input}
@@ -184,6 +177,12 @@ const StorePackageRegistrationScreen: React.FC<
           setText={setPrice}
           props={{ keyboardType: 'number-pad' }}
         />
+
+        <SizedBox height={26} />
+
+        <Text style={styles.title}>상품 설명</Text>
+        <SizedBox height={8} />
+        <MultiImageSelector assets={description} setAssets={setDescription} />
 
         <SizedBox height={40} />
 

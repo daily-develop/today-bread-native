@@ -9,6 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 import { Colors } from '@/constants/color';
 import { Product } from '@/domain/product';
@@ -17,12 +18,21 @@ import SizedBox from '@/components/SizedBox';
 import Conditional from '@/hocs/Conditional';
 import StoreProductItemModal from '@/screens/store/detail/components/StoreProductItemModal';
 import CustomButton from '@/components/CustomButton';
+import {
+  StoreDetailNavigations,
+  StoreDetailStackParamProps,
+} from '@/navigations/stack/store';
+
+type navigationProp =
+  StoreDetailStackParamProps<StoreDetailNavigations.PackageRegistration>['navigation'];
 
 interface StoreProductItemProps {
   product: Product;
 }
 
 const StoreProductItem: React.FC<StoreProductItemProps> = ({ product }) => {
+  const navigation = useNavigation<navigationProp>();
+
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const backgroundColor = useMemo<StyleProp<ViewStyle>>(
@@ -34,54 +44,60 @@ const StoreProductItem: React.FC<StoreProductItemProps> = ({ product }) => {
     [product.status]
   );
 
+  const handleProduct = useCallback(() => {
+    navigation.push(StoreDetailNavigations.Product, { productId: product.id });
+  }, [navigation, product.id]);
+
   const handleOnPress = useCallback(() => {
     setModalOpen(true);
   }, [setModalOpen]);
 
   return (
     <>
-      <View style={[styles.container, backgroundColor]}>
-        <CustomImage
-          style={styles.image}
-          imageUrl={product.image?.url}
-          width={100}
-          height={100}
-        />
+      <TouchableOpacity
+        onPress={handleProduct}
+        activeOpacity={product.status === true ? 0.75 : 1}
+        disabled={product.status === false}
+      >
+        <View style={[styles.container, backgroundColor]}>
+          <CustomImage
+            style={styles.image}
+            imageUrl={product.image?.url}
+            width={100}
+            height={100}
+          />
 
-        <SizedBox width={18} />
+          <SizedBox width={18} />
 
-        <View style={styles.infoContainer}>
-          <Text style={styles.title}>{product.name}</Text>
+          <View style={styles.infoContainer}>
+            <Text style={styles.title}>{product.name}</Text>
 
-          <SizedBox height={10} />
+            <SizedBox height={10} />
 
-          <Text style={styles.text}>{product.description}</Text>
+            <Text style={styles.text}>{product.price.toLocaleString()} 원</Text>
+          </View>
 
-          <SizedBox height={6} />
+          <View>
+            <Conditional condition={product.status === true}>
+              <>
+                <TouchableOpacity onPress={handleOnPress} activeOpacity={0.65}>
+                  <MaterialCommunityIcons
+                    name="dots-vertical"
+                    size={20}
+                    color={Colors.black}
+                  />
+                </TouchableOpacity>
 
-          <Text style={styles.text}>{product.price.toLocaleString()} 원</Text>
-        </View>
-
-        <View>
-          <Conditional condition={product.status === true}>
-            <>
-              <TouchableOpacity onPress={handleOnPress} activeOpacity={0.65}>
-                <MaterialCommunityIcons
-                  name="dots-vertical"
-                  size={20}
-                  color={Colors.black}
+                <StoreProductItemModal
+                  open={modalOpen}
+                  setOpen={setModalOpen}
+                  product={product}
                 />
-              </TouchableOpacity>
-
-              <StoreProductItemModal
-                open={modalOpen}
-                setOpen={setModalOpen}
-                product={product}
-              />
-            </>
-          </Conditional>
+              </>
+            </Conditional>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
 
       <Conditional condition={product.status === false}>
         <View style={styles.statusContainer}>

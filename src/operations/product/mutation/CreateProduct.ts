@@ -10,12 +10,13 @@ import {
 } from '@/operations/product/query/GetProducts';
 
 export type Data = Record<'createProduct', Product>;
+
 export interface Variable {
   storeId: string;
   image?: ReactNativeFile;
   name: string;
   breadType: BreadType;
-  description?: string;
+  description: ReactNativeFile[];
   price: number;
   quantity: number | null;
 }
@@ -27,7 +28,7 @@ export const CREATE_PRODUCT_GQL = gql`
     $image: Upload
     $name: String!
     $breadType: BreadType!
-    $description: String
+    $description: [Upload!]!
     $price: Int!
     $quantity: Int
   ) {
@@ -60,7 +61,7 @@ export const CREATE_PRODUCT = (options?: MutationHookOptions<Data, Variable>) =>
           },
         },
         (prev) => ({
-          products: [data.createProduct, ...prev.products],
+          products: [data.createProduct, ...(prev?.products ?? [])],
         })
       );
     },

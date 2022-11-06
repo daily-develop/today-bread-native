@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { Product } from '@/domain/product';
 import CustomImage from '@/components/CustomImage';
 import SizedBox from '@/components/SizedBox';
 import { Colors } from '@/constants/color';
+import {
+  StoreDetailNavigations,
+  StoreDetailStackParamProps,
+} from '@/navigations/stack/store';
+
+type navigationProp =
+  StoreDetailStackParamProps<StoreDetailNavigations.Home>['navigation'];
 
 interface StoreDetailProductItemProps {
   product: Product;
@@ -13,8 +21,18 @@ interface StoreDetailProductItemProps {
 const StoreDetailProductItem: React.FC<StoreDetailProductItemProps> = ({
   product,
 }) => {
+  const navigation = useNavigation<navigationProp>();
+
+  const handleOnPress = useCallback(() => {
+    navigation.push(StoreDetailNavigations.Product, { productId: product.id });
+  }, [navigation, product]);
+
   return (
-    <TouchableOpacity style={styles.container} activeOpacity={0.8}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={handleOnPress}
+      activeOpacity={0.8}
+    >
       <CustomImage
         style={styles.image}
         imageUrl={product.image?.url ?? undefined}
