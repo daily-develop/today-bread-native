@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   Dimensions,
+  GestureResponderEvent,
   Image,
   LayoutChangeEvent,
   StyleSheet,
@@ -54,18 +55,19 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
   );
 
   const [headerHeight, setHeaderHeight] = useState<number | null>(null);
-  const y = useSharedValue<number | null>(null);
+  const height = useSharedValue<number | null>(null);
+  const [touchStarted, setTouchStarted] = useState<number>(0);
 
   const headerAnimatedStyle = useAnimatedStyle(() => ({
-    ...(y.value !== null
+    ...(height.value !== null
       ? {
-          height: withTiming(y.value),
+          height: withTiming(height.value),
         }
       : {}),
   }));
 
   useEffect(() => {
-    y.value = headerHeight * productDetailHeaderHeight;
+    height.value = headerHeight * productDetailHeaderHeight;
   }, [headerHeight, productDetailHeaderHeight]);
 
   const handleOnLayout = useCallback(
@@ -81,6 +83,19 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
     [headerHeight]
   );
 
+  const handleOnTouchStart = useCallback((event: GestureResponderEvent) => {
+    setTouchStarted(event.nativeEvent.locationY);
+  }, []);
+
+  const handleOnTouchEnd = useCallback(
+    (event: GestureResponderEvent) => {
+      if (touchStarted > event.nativeEvent.locationY) {
+        productDetailHeaderHeightVar(0);
+      }
+    },
+    [touchStarted]
+  );
+
   const handleStore = useCallback(() => {
     if (!!data?.product?.store?.id) {
       navigation.push(StoreDetailNavigations.Home, {
@@ -94,6 +109,8 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
       <Animated.View
         style={[styles.header, headerAnimatedStyle]}
         onLayout={handleOnLayout}
+        onTouchStart={handleOnTouchStart}
+        onTouchEnd={handleOnTouchEnd}
       >
         <Image
           style={[styles.image]}
