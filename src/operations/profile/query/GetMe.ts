@@ -1,4 +1,4 @@
-import { gql, QueryOptions, useQuery } from '@apollo/client';
+import { gql, LazyQueryHookOptions, useLazyQuery } from '@apollo/client';
 
 import { Profile } from '@/domain/profile';
 
@@ -23,7 +23,7 @@ export const GET_ME_GQL = gql`
   }
 `;
 
-export const GET_ME = (options?: QueryOptions<Data, Variables>) =>
-  useQuery<Data, Variables>(GET_ME_GQL, {
+export const GET_ME = (options?: LazyQueryHookOptions<Data, Variables>) =>
+  useLazyQuery<Data, Variables>(GET_ME_GQL, {
     ...options,
   });

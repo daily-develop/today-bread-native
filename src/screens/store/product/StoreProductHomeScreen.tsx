@@ -21,6 +21,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { AntDesign, Entypo } from '@expo/vector-icons';
 import { useReactiveVar } from '@apollo/client';
+import { getBottomSpace } from 'react-native-iphone-x-helper';
 
 import { GET_PRODUCT } from '@/operations/product/query/GetProduct';
 import { Colors } from '@/constants/color';
@@ -33,7 +34,7 @@ import {
 import ProductTopTabNavigator from '@/navigations/tab/product/ProductTopTabNavigator';
 import SizedBox from '@/components/SizedBox';
 import CustomButton from '@/components/CustomButton';
-import { getBottomSpace } from 'react-native-iphone-x-helper';
+import Conditional from '@/hocs/Conditional';
 
 export const StoreProductHomeScreenOptions: StackNavigationOptions = {
   title: '',
@@ -174,13 +175,15 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
 
       <ProductTopTabNavigator productId={route.params.productId} />
 
-      <View style={[styles.subscribeButtonContainer, bottomStyle]}>
-        <CustomButton
-          style={styles.subscribeButton}
-          label="구독하기"
-          onPress={handleSubscribe}
-        />
-      </View>
+      <Conditional condition={!!data?.product?.store?.isManager !== true}>
+        <View style={[styles.subscribeButtonContainer, bottomStyle]}>
+          <CustomButton
+            style={styles.subscribeButton}
+            label="구독하기"
+            onPress={handleSubscribe}
+          />
+        </View>
+      </Conditional>
     </Animated.View>
   );
 };
@@ -191,6 +194,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   image: {
     width: '100%',

@@ -5,6 +5,7 @@ export interface Store {
   id: string;
   createdAt: Date;
   updatedAt: Date;
+  isManager: boolean;
   name: string;
   description: string;
   location: string;

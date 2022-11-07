@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 import { GET_ME } from '@/operations/profile/query/GetMe';
@@ -8,7 +8,11 @@ import { Profile } from '@/domain/profile';
 import WhiteBreadIcon from '@/components/icons/WhiteBreadIcon';
 
 const ProfileHomeHeader: React.FC = () => {
-  const { data } = GET_ME();
+  const [getMe, { data }] = GET_ME();
+
+  useEffect(() => {
+    getMe();
+  }, []);
 
   const me = useMemo<Profile>(() => data?.me, [data]);
 
