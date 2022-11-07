@@ -1,17 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Dimensions,
   GestureResponderEvent,
   Image,
   LayoutChangeEvent,
-  Platform,
-  StatusBar,
-  StyleProp,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  ViewStyle,
 } from 'react-native';
 import { StackNavigationOptions } from '@react-navigation/stack';
 import Animated, {
@@ -21,7 +18,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import { AntDesign, Entypo } from '@expo/vector-icons';
 import { useReactiveVar } from '@apollo/client';
-import { getBottomSpace } from 'react-native-iphone-x-helper';
 
 import { GET_PRODUCT } from '@/operations/product/query/GetProduct';
 import { Colors } from '@/constants/color';
@@ -64,16 +60,6 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
   const [headerHeight, setHeaderHeight] = useState<number | null>(null);
   const height = useSharedValue<number | null>(null);
   const [touchStarted, setTouchStarted] = useState<number>(0);
-
-  const bottomStyle = useMemo<StyleProp<ViewStyle>>(
-    () => ({
-      bottom: Platform.select({
-        android: StatusBar.currentHeight,
-        ios: getBottomSpace(),
-      }),
-    }),
-    []
-  );
 
   const headerAnimatedStyle = useAnimatedStyle(() => ({
     ...(height.value !== null
@@ -171,17 +157,23 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
             <Text style={styles.score}>{data?.product?.score.toFixed(1)}</Text>
           </View>
         </View>
+
+        <SizedBox height={20} />
       </Animated.View>
 
       <ProductTopTabNavigator productId={route.params.productId} />
 
-      <Conditional condition={!!data?.product?.store?.isManager !== true}>
-        <View style={[styles.subscribeButtonContainer, bottomStyle]}>
-          <CustomButton
-            style={styles.subscribeButton}
-            label="구독하기"
-            onPress={handleSubscribe}
-          />
+      <Conditional
+        condition={!!data?.product?.store?.isManager !== true || true}
+      >
+        <View style={styles.subscribeButtonContainer}>
+          <SafeAreaView>
+            <CustomButton
+              style={[styles.subscribeButton]}
+              label="구독하기"
+              onPress={handleSubscribe}
+            />
+          </SafeAreaView>
         </View>
       </Conditional>
     </Animated.View>
@@ -194,7 +186,6 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 20,
-    paddingBottom: 20,
   },
   image: {
     width: '100%',
@@ -229,14 +220,10 @@ const styles = StyleSheet.create({
     color: Colors.black,
   },
   subscribeButtonContainer: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    paddingHorizontal: 32,
-    alignItems: 'center',
+    backgroundColor: Colors.primary,
   },
   subscribeButton: {
-    width: Dimensions.get('screen').width - 60,
+    width: '100%',
   },
 });
 

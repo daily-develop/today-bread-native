@@ -1,15 +1,6 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import {
-  FlatList,
-  ListRenderItem,
-  Platform,
-  StatusBar,
-  StyleProp,
-  StyleSheet,
-  ViewStyle,
-} from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { FlatList, ListRenderItem, StyleSheet } from 'react-native';
 import { MaterialTopTabNavigationOptions } from '@react-navigation/material-top-tabs';
-import { getBottomSpace } from 'react-native-iphone-x-helper';
 
 import {
   ProductTopTabNavigation,
@@ -44,16 +35,6 @@ const StoreProductDescriptionScreen: React.FC<
     getProduct();
   }, []);
 
-  const bottomPaddingStyle = useMemo<StyleProp<ViewStyle>>(
-    () => ({
-      paddingBottom: Platform.select({
-        android: StatusBar.currentHeight + 60,
-        ios: getBottomSpace() + 60,
-      }),
-    }),
-    []
-  );
-
   const keyExtractor = useCallback((item: File) => item.id, []);
 
   const renderItem = useCallback<ListRenderItem<File>>(
@@ -76,7 +57,6 @@ const StoreProductDescriptionScreen: React.FC<
   return (
     <FlatList
       style={styles.container}
-      contentContainerStyle={bottomPaddingStyle}
       data={data?.product?.description ?? []}
       keyExtractor={keyExtractor}
       renderItem={renderItem}
