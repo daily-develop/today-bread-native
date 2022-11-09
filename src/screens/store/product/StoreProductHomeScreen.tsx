@@ -31,6 +31,8 @@ import ProductTopTabNavigator from '@/navigations/tab/product/ProductTopTabNavig
 import SizedBox from '@/components/SizedBox';
 import CustomButton from '@/components/CustomButton';
 import Conditional from '@/hocs/Conditional';
+import { useFocusEffect } from '@react-navigation/native';
+import { mainBottomNavigationVisibleVar } from '@/stores/common';
 
 export const StoreProductHomeScreenOptions: StackNavigationOptions = {
   title: '',
@@ -45,6 +47,10 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
   navigation,
   route,
 }) => {
+  useFocusEffect(() => {
+    mainBottomNavigationVisibleVar(false);
+  });
+
   const [getProduct, { data }] = GET_PRODUCT({
     variables: { productId: route.params.productId },
   });
