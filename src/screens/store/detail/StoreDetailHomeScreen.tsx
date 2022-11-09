@@ -50,7 +50,7 @@ const StoreDetailHomeScreen: React.FC<StoreDetailHomeScreenProps> = ({
   });
 
   const [getStore, { data: storeData }] = GET_STORE();
-  const [getProduct, { data: productData }] = GET_PRODUCTS();
+  const [getProduct, { data: productData, fetchMore }] = GET_PRODUCTS();
 
   const store = useMemo<Store | null>(
     () => storeData?.store ?? null,
@@ -81,6 +81,17 @@ const StoreDetailHomeScreen: React.FC<StoreDetailHomeScreenProps> = ({
     ({ item }) => <StoreDetailProductItem product={item} />,
     []
   );
+
+  const onEndReached = useCallback(() => {
+    if (productList.length % 10 == 0) {
+      fetchMore({
+        variables: {
+          page: (productList.length % 10) + 1,
+          take: 10,
+        },
+      });
+    }
+  }, [productList.length]);
 
   return (
     <SafeAreaView style={styles.safeContainer}>
@@ -117,6 +128,8 @@ const StoreDetailHomeScreen: React.FC<StoreDetailHomeScreenProps> = ({
             data={productList}
             keyExtractor={keyExtractor}
             renderItem={renderItem}
+            onEndReachedThreshold={10}
+            onEndReached={onEndReached}
             numColumns={2}
             showsVerticalScrollIndicator={false}
           />
