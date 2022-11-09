@@ -5,7 +5,8 @@ import { GET_ME } from '@/operations/profile/query/GetMe';
 import Conditional from '@/hocs/Conditional';
 import { Colors } from '@/constants/color';
 import { Profile } from '@/domain/profile';
-import WhiteBreadIcon from '@/components/icons/WhiteBreadIcon';
+
+import BreadIcon from '@/components/icons/BreadIcon';
 
 const ProfileHomeHeader: React.FC = () => {
   const [getMe, { data }] = GET_ME();
@@ -35,7 +36,7 @@ const ProfileHomeHeader: React.FC = () => {
 
         <Conditional condition={me?.profileImageUrl !== null}>
           <View style={[styles.profileImage, styles.emptyProfileImage]}>
-            <WhiteBreadIcon size={32} />
+            <BreadIcon size={32} />
           </View>
         </Conditional>
       </View>

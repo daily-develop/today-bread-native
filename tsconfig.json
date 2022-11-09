@@ -18,7 +18,9 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ]
+      ],"@assets/*": [
+        "./assets/*"
+      ],
     }
   },
   "exclude": [
