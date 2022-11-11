@@ -15,7 +15,7 @@ const App: React.FC = () => {
     <ApolloProvider client={client}>
       <NavigationContainer>
         <SafeAreaProvider>
-          <StatusBar />
+          <StatusBar animated={true} style="dark" />
           <Main />
         </SafeAreaProvider>
       </NavigationContainer>

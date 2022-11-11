@@ -7,6 +7,9 @@
     "web": "expo start --web",
     "test": "jest --watchAll"
   },
+  "resolutions": {
+    "@expo/cli": "0.4.8"
+  },
   "jest": {
     "preset": "jest-expo"
   },

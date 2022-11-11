@@ -61,6 +61,7 @@ const ProfileHomeScreen: React.FC<ProfileHomeScreenProps> = () => {
       ListHeaderComponent={listHeaderComponent}
       onEndReachedThreshold={10}
       onEndReached={onEndReached}
+      bounces={false}
     />
   );
 };
