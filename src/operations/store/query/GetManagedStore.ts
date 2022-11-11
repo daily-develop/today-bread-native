@@ -5,12 +5,15 @@ import { STORE_FRAGMENT_GQL } from '@/operations/store/fragment';
 
 export type Data = Record<'managedStore', Store[]>;
 
-export interface Variable {}
+export interface Variable {
+  page?: number;
+  take?: number;
+}
 
 export const GET_MANAGED_STORE_GQL = gql`
   ${STORE_FRAGMENT_GQL}
-  query managedStore {
-    managedStore {
+  query managedStore($page: Int, $take: Int) {
+    managedStore(page: $page, take: $take) {
       ...StoreFragment
     }
   }

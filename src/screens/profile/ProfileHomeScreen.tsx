@@ -1,78 +1,73 @@
-import React, { useCallback } from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { FlatList, ListRenderItem, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { StackNavigationOptions } from '@react-navigation/stack';
-
-import {
-  ProfileNavigations,
-  ProfileStackParamProps,
-} from '@/navigations/stack/profile';
-import { Colors } from '@/constants/color';
 import { mainBottomNavigationVisibleVar } from '@/stores/common';
 
+import { GET_MANAGED_STORE } from '@/operations/store/query/GetManagedStore';
+import { Store } from '@/domain/store';
 import ProfileHomeHeader from '@/screens/profile/component/header/ProfileHomeHeader';
-import ManagedStoreList from '@/screens/profile/component/ManagedStoreList';
+import ManagedStoreItem from '@/screens/profile/component/ManagedStoreItem';
+import ProfileHomeMenu from '@/screens/profile/component/ProfileHomeMenu';
 
 export const ProfileHomeScreenOptions: StackNavigationOptions = {
   header: () => <ProfileHomeHeader />,
 };
 
-interface ProfileHomeScreenProps {
-  navigation: ProfileStackParamProps<ProfileNavigations.Home>['navigation'];
-}
+interface ProfileHomeScreenProps {}
 
-const ProfileHomeScreen: React.FC<ProfileHomeScreenProps> = ({
-  navigation,
-}) => {
+const ProfileHomeScreen: React.FC<ProfileHomeScreenProps> = () => {
   useFocusEffect(() => {
     mainBottomNavigationVisibleVar(true);
   });
 
-  const handleMenu = useCallback(
-    (navigate: ProfileNavigations) => {
-      return () => {
-        navigation.push(navigate);
-      };
-    },
-    [navigation]
+  const [getManagedStore, { data, fetchMore }] = GET_MANAGED_STORE();
+
+  useEffect(() => {
+    getManagedStore({
+      variables: {
+        page: 1,
+        take: 10,
+      },
+    });
+  }, []);
+
+  const keyExtractor = useCallback((item: Store) => item.id, []);
+
+  const renderItem = useCallback<ListRenderItem<Store>>(
+    ({ item }) => <ManagedStoreItem store={item} />,
+    []
   );
 
-  return (
-    <SafeAreaView style={styles.safeContainer}>
-      <ScrollView bounces={false} nestedScrollEnabled={true}>
-        <TouchableOpacity
-          style={styles.menuContainer}
-          onPress={handleMenu(ProfileNavigations.CreateStore)}
-          activeOpacity={0.65}
-        >
-          <Text style={styles.title}>가게 등록</Text>
-        </TouchableOpacity>
+  const listHeaderComponent = useCallback(() => <ProfileHomeMenu />, []);
 
-        <ManagedStoreList />
-      </ScrollView>
-    </SafeAreaView>
+  const onEndReached = useCallback(() => {
+    if (data?.managedStore.length % 10 === 0) {
+      fetchMore({
+        variables: {
+          page: data?.managedStore.length / 10 + 1,
+          take: 10,
+        },
+      });
+    }
+  }, [data?.managedStore.length]);
+
+  return (
+    <FlatList<Store>
+      contentContainerStyle={styles.container}
+      data={data?.managedStore ?? []}
+      keyExtractor={keyExtractor}
+      renderItem={renderItem}
+      ListHeaderComponent={listHeaderComponent}
+      onEndReachedThreshold={10}
+      onEndReached={onEndReached}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  safeContainer: {
-    flex: 1,
-  },
-  menuContainer: {
-    padding: 20,
-    borderBottomWidth: 0.8,
-    borderBottomColor: Colors.lightGray,
-  },
-  title: {
-    fontWeight: '600',
-    fontSize: 18,
-    color: Colors.black,
+  container: {
+    paddingHorizontal: 10,
   },
 });
 
