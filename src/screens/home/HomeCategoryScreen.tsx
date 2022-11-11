@@ -79,9 +79,12 @@ const HomeCategoryScreen: React.FC<HomeCategoryScreenProps> = ({
       fetchMore({
         variables: {
           breadType: route.params.breadType,
-          page: data?.products?.length / 10 + 1,
+          page: Math.floor(data?.products?.length / 10) + 1,
           take: 10,
         },
+        updateQuery: (prev, { fetchMoreResult }) => ({
+          products: [...(prev?.products ?? []), ...fetchMoreResult.products],
+        }),
       });
     }
   }, [data?.products?.length, route.params.breadType]);

@@ -62,9 +62,12 @@ const HomeRecentStoreScreen: React.FC<HomeRecentStoreScreenProps> = ({
     if (data?.stores?.length % 10 === 0) {
       fetchMore({
         variables: {
-          page: data?.stores?.length / 10 + 1,
+          page: Math.floor(data?.stores?.length / 10) + 1,
           take: 10,
         },
+        updateQuery: (prev, { fetchMoreResult }) => ({
+          stores: [...(prev?.stores ?? []), ...fetchMoreResult.stores],
+        }),
       });
     }
   }, [data?.stores?.length]);

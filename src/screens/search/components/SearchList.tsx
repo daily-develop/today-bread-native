@@ -52,9 +52,12 @@ const SearchList: React.FC<SearchListProps> = ({ search }) => {
       fetchMore({
         variables: {
           search,
-          page: data?.stores?.length / 10 + 1,
+          page: Math.floor(data?.stores?.length / 10) + 1,
           take: 10,
         },
+        updateQuery: (prev, { fetchMoreResult }) => ({
+          stores: [...(prev?.stores ?? []), ...fetchMoreResult.stores],
+        }),
       });
     }
   }, [data?.stores?.length]);

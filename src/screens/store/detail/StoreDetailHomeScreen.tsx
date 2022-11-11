@@ -86,9 +86,12 @@ const StoreDetailHomeScreen: React.FC<StoreDetailHomeScreenProps> = ({
     if (productList.length % 10 == 0) {
       fetchMore({
         variables: {
-          page: (productList.length % 10) + 1,
+          page: Math.floor(productList.length / 10) + 1,
           take: 10,
         },
+        updateQuery: (prev, { fetchMoreResult }) => ({
+          products: [...(prev?.products ?? []), ...fetchMoreResult.products],
+        }),
       });
     }
   }, [productList.length]);

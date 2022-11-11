@@ -46,9 +46,15 @@ const ProfileHomeScreen: React.FC<ProfileHomeScreenProps> = () => {
     if (data?.managedStore.length % 10 === 0) {
       fetchMore({
         variables: {
-          page: data?.managedStore.length / 10 + 1,
+          page: Math.floor(data?.managedStore.length / 10) + 1,
           take: 10,
         },
+        updateQuery: (prev, { fetchMoreResult }) => ({
+          managedStore: [
+            ...(prev.managedStore ?? []),
+            ...fetchMoreResult.managedStore,
+          ],
+        }),
       });
     }
   }, [data?.managedStore.length]);

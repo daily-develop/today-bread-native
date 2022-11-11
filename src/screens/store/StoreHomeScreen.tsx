@@ -69,12 +69,15 @@ const StoreHomeScreen: React.FC<StoreHomeScreenProps> = ({ navigation }) => {
   );
 
   const onEndReached = useCallback(() => {
-    if (data?.products.length % 10 == 0) {
+    if (data?.products.length % 10 === 0) {
       fetchMore({
         variables: {
-          page: (data?.products.length % 10) + 1,
+          page: Math.floor(data?.products.length / 10) + 1,
           take: 10,
         },
+        updateQuery: (prev, { fetchMoreResult }) => ({
+          products: [...(prev?.products ?? []), ...fetchMoreResult.products],
+        }),
       });
     }
   }, [data?.products.length]);
@@ -94,7 +97,7 @@ const StoreHomeScreen: React.FC<StoreHomeScreenProps> = ({ navigation }) => {
       keyExtractor={keyExtractor}
       renderItem={renderItem}
       showsVerticalScrollIndicator={false}
-      onEndReachedThreshold={10}
+      onEndReachedThreshold={30}
       onEndReached={onEndReached}
       onRefresh={onRefresh}
       refreshing={refreshing}
