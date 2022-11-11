@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   FlatList,
   ListRenderItem,
@@ -30,7 +30,9 @@ const HomeRecentStoreScreen: React.FC<HomeRecentStoreScreenProps> = ({
     mainBottomNavigationVisibleVar(false);
   });
 
-  const [getStores, { data, fetchMore }] = GET_STORES();
+  const [getStores, { data, fetchMore, refetch }] = GET_STORES();
+
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   useEffect(() => {
     getStores({
@@ -67,6 +69,15 @@ const HomeRecentStoreScreen: React.FC<HomeRecentStoreScreenProps> = ({
     }
   }, [data?.stores?.length]);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch({
+      page: 1,
+      take: 10,
+    });
+    setRefreshing(false);
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeContainer}>
       <FlatList
@@ -75,6 +86,8 @@ const HomeRecentStoreScreen: React.FC<HomeRecentStoreScreenProps> = ({
         renderItem={renderItem}
         onEndReachedThreshold={10}
         onEndReached={onEndReached}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
         showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>

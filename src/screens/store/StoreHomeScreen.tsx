@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
 import { CommonActions, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationOptions } from '@react-navigation/stack';
@@ -27,9 +27,11 @@ const StoreHomeScreen: React.FC<StoreHomeScreenProps> = ({ navigation }) => {
     mainBottomNavigationVisibleVar(true);
   });
 
-  const [getProducts, { data, fetchMore }] = GET_PRODUCTS({
+  const [getProducts, { data, fetchMore, refetch }] = GET_PRODUCTS({
     fetchPolicy: 'cache-and-network',
   });
+
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   useEffect(() => {
     getProducts({
@@ -77,6 +79,15 @@ const StoreHomeScreen: React.FC<StoreHomeScreenProps> = ({ navigation }) => {
     }
   }, [data?.products.length]);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch({
+      page: 1,
+      take: 10,
+    });
+    setRefreshing(false);
+  }, []);
+
   return (
     <FlatList<Product>
       data={data?.products ?? []}
@@ -85,6 +96,8 @@ const StoreHomeScreen: React.FC<StoreHomeScreenProps> = ({ navigation }) => {
       showsVerticalScrollIndicator={false}
       onEndReachedThreshold={10}
       onEndReached={onEndReached}
+      onRefresh={onRefresh}
+      refreshing={refreshing}
     />
   );
 };

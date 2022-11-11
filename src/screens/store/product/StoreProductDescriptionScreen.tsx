@@ -77,7 +77,6 @@ const StoreProductDescriptionScreen: React.FC<
           onScrollEndDrag={handleOnScrollEndDrag}
           onScrollBeginDrag={handleOnScrollBeginDrag}
           showsVerticalScrollIndicator={false}
-          bounces={false}
         />
       </Conditional>
 

@@ -21,4 +21,7 @@ export const GET_STORES_GQL = gql`
 `;
 
 export const GET_STORES = (options?: LazyQueryHookOptions<Data, Variable>) =>
-  useLazyQuery<Data, Variable>(GET_STORES_GQL, options);
+  useLazyQuery<Data, Variable>(GET_STORES_GQL, {
+    fetchPolicy: 'cache-and-network',
+    ...options,
+  });

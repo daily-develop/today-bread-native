@@ -27,4 +27,7 @@ export const GET_PRODUCTS_GQL = gql`
 `;
 
 export const GET_PRODUCTS = (options?: LazyQueryHookOptions<Data, Variable>) =>
-  useLazyQuery<Data, Variable>(GET_PRODUCTS_GQL, { ...options });
+  useLazyQuery<Data, Variable>(GET_PRODUCTS_GQL, {
+    fetchPolicy: 'cache-and-network',
+    ...options,
+  });
