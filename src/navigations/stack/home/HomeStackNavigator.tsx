@@ -10,6 +10,15 @@ import {
 import { stackNavigationOptions } from '@/constants/navigation.options';
 
 import HomeScreen, { HomeScreenOptions } from '@/screens/home/HomeScreen';
+import StoreDetailStackNavigator, {
+  StoreDetailStackNavigatorOptions,
+} from '@/navigations/stack/store/StoreDetailStackNavigator';
+import StoreStackNavigator, {
+  StoreStackNavigatorOptions,
+} from '@/navigations/stack/store/StoreStackNavigator';
+import HomeRecentStoreScreen, {
+  HomeRecentStoreScreenOptions,
+} from '@/screens/home/HomeRecentStoreScreen';
 
 export const HomeStackNavigatorOptions: BottomTabNavigationOptions = {
   tabBarIcon: ({ size, color }) => {
@@ -26,6 +35,21 @@ const HomeStackNavigator: React.FC = () => {
         name={HomeNavigations.Home}
         component={HomeScreen}
         options={HomeScreenOptions}
+      />
+      <Stack.Screen
+        name={HomeNavigations.Product}
+        component={StoreDetailStackNavigator}
+        options={StoreDetailStackNavigatorOptions}
+      />
+      <Stack.Screen
+        name={HomeNavigations.Store}
+        component={StoreStackNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={HomeNavigations.RecentStore}
+        component={HomeRecentStoreScreen}
+        options={HomeRecentStoreScreenOptions}
       />
     </Stack.Navigator>
   );

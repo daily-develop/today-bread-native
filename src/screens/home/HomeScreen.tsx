@@ -26,6 +26,9 @@ import SandwichesIcon from '@/components/icons/SandwichesIcon';
 import PetitFourIcon from '@/components/icons/PetitFourIcon';
 import SizedBox from '@/components/SizedBox';
 
+import RecommendedProductList from '@/screens/home/components/RecommandedProductList';
+import RecentStoreList from '@/screens/home/components/RecentStoreList';
+
 export const HomeScreenOptions: StackNavigationOptions = {
   title: '오늘의 빵',
   headerTitleStyle: {
@@ -135,6 +138,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({}) => {
             </View>
           ))}
       </View>
+
+      <SizedBox height={20} />
+
+      <RecommendedProductList />
+
+      <SizedBox height={20} />
+
+      <RecentStoreList />
     </ScrollView>
   );
 };

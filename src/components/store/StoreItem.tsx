@@ -1,21 +1,17 @@
 import React, { useCallback } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { StarIcon } from 'react-native-heroicons/mini';
 
-import { Colors } from '@/constants/color';
-import { Product } from '@/domain/product';
+import { Store } from '@/domain/store';
 import CustomImage from '@/components/CustomImage';
 import SizedBox from '@/components/SizedBox';
+import { Colors } from '@/constants/color';
 
-interface ProductItemProps {
-  product: Product;
+interface StoreItemProps {
+  store: Store;
   onPress?: () => void;
 }
 
-const ProductItem: React.FC<ProductItemProps> = ({
-  product,
-  onPress = () => {},
-}) => {
+const StoreItem: React.FC<StoreItemProps> = ({ store, onPress = () => {} }) => {
   const handleOnPress = useCallback(() => {
     onPress();
   }, [onPress]);
@@ -28,7 +24,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
     >
       <CustomImage
         style={styles.image}
-        imageUrl={product.image?.url}
+        imageUrl={store.image?.url}
         width={78}
         height={78}
       />
@@ -36,21 +32,11 @@ const ProductItem: React.FC<ProductItemProps> = ({
       <SizedBox width={20} />
 
       <View style={styles.infoContainer}>
-        <View style={[styles.rowContainer, styles.infoTopContainer]}>
-          <Text style={styles.product}>{product.name} 패키지</Text>
-
-          <View style={styles.rowContainer}>
-            <StarIcon size={16} color={Colors.primary} />
-
-            <SizedBox width={4} />
-
-            <Text style={styles.score}>{product.score.toFixed(1)}</Text>
-          </View>
-        </View>
+        <Text style={styles.product}>{store.name}</Text>
 
         <SizedBox height={8} />
 
-        <Text style={styles.store}>{product.store.name}</Text>
+        <Text style={styles.store}>{store.description}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -70,9 +56,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  infoTopContainer: {
-    justifyContent: 'space-between',
-  },
   product: {
     fontWeight: '700',
     fontSize: 16,
@@ -90,4 +73,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductItem;
+export default StoreItem;

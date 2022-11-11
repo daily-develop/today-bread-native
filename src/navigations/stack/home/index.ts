@@ -7,10 +7,16 @@ import {
 
 export enum HomeNavigations {
   Home = 'Home',
+  Product = 'HomeProduct',
+  Store = 'HomeStore',
+  RecentStore = 'HomeRecentStore',
 }
 
 export type HomeStackParamList = {
   [HomeNavigations.Home]: undefined;
+  [HomeNavigations.Product]: undefined;
+  [HomeNavigations.Store]: undefined;
+  [HomeNavigations.RecentStore]: undefined;
 };
 
 export type HomeStackParamProps<T extends HomeNavigations> =
