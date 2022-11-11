@@ -6,13 +6,16 @@ import {
   StyleSheet,
 } from 'react-native';
 import { CommonActions, useFocusEffect } from '@react-navigation/native';
+import { StackNavigationOptions } from '@react-navigation/stack';
 
 import { mainBottomNavigationVisibleVar } from '@/stores/common';
 import { HomeNavigations, HomeStackParamProps } from '@/navigations/stack/home';
+import { StoreDetailNavigations } from '@/navigations/stack/store';
 import { getBreadTypeName, Product } from '@/domain/product';
 import { GET_PRODUCTS } from '@/operations/product/query/GetProducts';
 import ProductItem from '@/components/product/ProductItem';
-import { StoreDetailNavigations } from '@/navigations/stack/store';
+
+export const HomeCategoryScreenOptions: StackNavigationOptions = {};
 
 interface HomeCategoryScreenProps {
   navigation: HomeStackParamProps<HomeNavigations.Category>['navigation'];
@@ -30,6 +33,9 @@ const HomeCategoryScreen: React.FC<HomeCategoryScreenProps> = ({
   useEffect(() => {
     navigation.setOptions({
       title: getBreadTypeName(route.params.breadType),
+      headerStyle: {
+        elevation: 1,
+      },
     });
   }, [route.params.breadType]);
 
