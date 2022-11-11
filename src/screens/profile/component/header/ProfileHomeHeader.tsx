@@ -27,7 +27,7 @@ const ProfileHomeHeader: React.FC = () => {
           <Text style={styles.address}>{me?.address2 ?? ''}</Text>
         </View>
 
-        <Conditional condition={me?.profileImageUrl === null}>
+        <Conditional condition={me?.profileImageUrl !== null}>
           <Image
             style={styles.profileImage}
             source={{ uri: me?.profileImageUrl }}
@@ -35,7 +35,7 @@ const ProfileHomeHeader: React.FC = () => {
           />
         </Conditional>
 
-        <Conditional condition={me?.profileImageUrl !== null}>
+        <Conditional condition={me?.profileImageUrl === null}>
           <View style={[styles.profileImage, styles.emptyProfileImage]}>
             <BreadIcon size={32} />
           </View>
