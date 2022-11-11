@@ -5,14 +5,13 @@ import {
   SafeAreaView,
   StyleSheet,
 } from 'react-native';
-import { CommonActions, useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import { StackNavigationOptions } from '@react-navigation/stack';
 
 import { mainBottomNavigationVisibleVar } from '@/stores/common';
 import { HomeNavigations, HomeStackParamProps } from '@/navigations/stack/home';
 import { GET_STORES } from '@/operations/store/query/GetStores';
 import { Store } from '@/domain/store';
-import { StoreNavigations } from '@/navigations/stack/store';
 import StoreItem from '@/components/store/StoreItem';
 
 export const HomeRecentStoreScreenOptions: StackNavigationOptions = {
@@ -45,15 +44,7 @@ const HomeRecentStoreScreen: React.FC<HomeRecentStoreScreenProps> = ({
   const handleOnPress = useCallback(
     (store: Store) => {
       return () =>
-        navigation.dispatch(
-          CommonActions.navigate(HomeNavigations.Store, {
-            initial: true,
-            screen: StoreNavigations.Detail,
-            params: {
-              storeId: store.id,
-            },
-          })
-        );
+        navigation.push(HomeNavigations.Store, { storeId: store.id });
     },
     [navigation]
   );

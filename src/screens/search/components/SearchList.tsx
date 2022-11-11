@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
-import { CommonActions, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 import { Store } from '@/domain/store';
 import { GET_STORES } from '@/operations/store/query/GetStores';
@@ -8,7 +8,6 @@ import {
   SearchNavigations,
   SearchStackParamProps,
 } from '@/navigations/stack/search';
-import { StoreNavigations } from '@/navigations/stack/store';
 import StoreItem from '@/components/store/StoreItem';
 
 type navigationProp =
@@ -36,15 +35,7 @@ const SearchList: React.FC<SearchListProps> = ({ search }) => {
   const handleOnPress = useCallback(
     (store: Store) => {
       return () =>
-        navigation.dispatch(
-          CommonActions.navigate(SearchNavigations.Store, {
-            initial: true,
-            screen: StoreNavigations.Detail,
-            params: {
-              storeId: store.id,
-            },
-          })
-        );
+        navigation.push(SearchNavigations.Store, { storeId: store.id });
     },
     [navigation]
   );

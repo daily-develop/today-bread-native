@@ -12,7 +12,7 @@ export enum SearchNavigations {
 
 export type SearchStackParamList = {
   [SearchNavigations.Home]: { search?: string };
-  [SearchNavigations.Store]: undefined;
+  [SearchNavigations.Store]: { storeId: string };
 };
 
 export type SearchStackParamProps<T extends SearchNavigations> =

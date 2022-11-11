@@ -28,7 +28,7 @@ const RecommendedProductList: React.FC = () => {
     (product: Product) => {
       return () =>
         navigation.dispatch(
-          CommonActions.navigate(HomeNavigations.Product, {
+          CommonActions.navigate(HomeNavigations.Store, {
             initial: true,
             screen: StoreDetailNavigations.Product,
             params: {

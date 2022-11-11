@@ -49,7 +49,7 @@ const HomeCategoryScreen: React.FC<HomeCategoryScreenProps> = ({
     (product: Product) => {
       return () =>
         navigation.dispatch(
-          CommonActions.navigate(HomeNavigations.Product, {
+          CommonActions.navigate(HomeNavigations.Store, {
             initial: true,
             screen: StoreDetailNavigations.Product,
             params: {

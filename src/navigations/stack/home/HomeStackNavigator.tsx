@@ -45,14 +45,9 @@ const HomeStackNavigator: React.FC = () => {
         options={HomeCategoryScreenOptions}
       />
       <Stack.Screen
-        name={HomeNavigations.Product}
+        name={HomeNavigations.Store}
         component={StoreDetailStackNavigator}
         options={StoreDetailStackNavigatorOptions}
-      />
-      <Stack.Screen
-        name={HomeNavigations.Store}
-        component={StoreStackNavigator}
-        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={HomeNavigations.RecentStore}

@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { CommonActions, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 import { HomeNavigations, HomeStackParamProps } from '@/navigations/stack/home';
-import { StoreNavigations } from '@/navigations/stack/store';
 import { Colors } from '@/constants/color';
 import { Store } from '@/domain/store';
 import { GET_STORES } from '@/operations/store/query/GetStores';
@@ -27,15 +26,7 @@ const RecentStoreList: React.FC = () => {
   const handleOnPress = useCallback(
     (store: Store) => {
       return () =>
-        navigation.dispatch(
-          CommonActions.navigate(HomeNavigations.Store, {
-            initial: true,
-            screen: StoreNavigations.Detail,
-            params: {
-              storeId: store.id,
-            },
-          })
-        );
+        navigation.push(HomeNavigations.Store, { storeId: store.id });
     },
     [navigation]
   );

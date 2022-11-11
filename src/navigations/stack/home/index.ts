@@ -10,7 +10,6 @@ import { BreadType } from '@/domain/product';
 export enum HomeNavigations {
   Home = 'Home',
   Category = 'HomeCategory',
-  Product = 'HomeProduct',
   Store = 'HomeStore',
   RecentStore = 'HomeRecentStore',
 }
@@ -18,8 +17,7 @@ export enum HomeNavigations {
 export type HomeStackParamList = {
   [HomeNavigations.Home]: undefined;
   [HomeNavigations.Category]: { breadType: BreadType };
-  [HomeNavigations.Product]: undefined;
-  [HomeNavigations.Store]: undefined;
+  [HomeNavigations.Store]: { storeId: string };
   [HomeNavigations.RecentStore]: undefined;
 };
 
