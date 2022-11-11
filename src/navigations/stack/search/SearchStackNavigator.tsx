@@ -12,6 +12,7 @@ import { stackNavigationOptions } from '@/constants/navigation.options';
 import SearchHomeScreen, {
   SearchHomeScreenOptions,
 } from '@/screens/search/SearchHomeScreen';
+import StoreStackNavigator from '@/navigations/stack/store/StoreStackNavigator';
 
 export const SearchStackNavigatorOptions: BottomTabNavigationOptions = {
   tabBarIcon: ({ size, color }) => {
@@ -28,6 +29,11 @@ const SearchStackNavigator: React.FC = () => {
         name={SearchNavigations.Home}
         component={SearchHomeScreen}
         options={SearchHomeScreenOptions}
+      />
+      <Stack.Screen
+        name={SearchNavigations.Store}
+        component={StoreStackNavigator}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
