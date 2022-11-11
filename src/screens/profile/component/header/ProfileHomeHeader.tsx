@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { GET_ME } from '@/operations/profile/query/GetMe';
 import Conditional from '@/hocs/Conditional';
@@ -7,6 +7,7 @@ import { Colors } from '@/constants/color';
 import { Profile } from '@/domain/profile';
 
 import BreadIcon from '@/components/icons/BreadIcon';
+import ProfileHomeMenu from '@/screens/profile/component/ProfileHomeMenu';
 
 const ProfileHomeHeader: React.FC = () => {
   const [getMe, { data }] = GET_ME();
@@ -18,7 +19,7 @@ const ProfileHomeHeader: React.FC = () => {
   const me = useMemo<Profile>(() => data?.me, [data]);
 
   return (
-    <SafeAreaView>
+    <View>
       <View style={styles.container}>
         <View>
           <Text style={styles.name}>{me?.name ?? ''}</Text>
@@ -40,7 +41,9 @@ const ProfileHomeHeader: React.FC = () => {
           </View>
         </Conditional>
       </View>
-    </SafeAreaView>
+
+      <ProfileHomeMenu />
+    </View>
   );
 };
 

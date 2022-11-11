@@ -58,16 +58,18 @@ const MultiImageSelectorModal: React.FC<MultiImageSelectorModalProps> = ({
   }, [status?.granted, requestPermission]);
 
   useEffect(() => {
-    MediaLibrary.getAssetsAsync({
-      first: 60,
-      mediaType: MediaLibrary.MediaType.photo,
-      sortBy: [MediaLibrary.SortBy.creationTime],
-    }).then((data) => {
-      setPhotos(data.assets);
-      setAfter(data.endCursor);
-      setHasNext(data.hasNextPage);
-    });
-  }, [setPhotos]);
+    if (status?.granted) {
+      MediaLibrary.getAssetsAsync({
+        first: 60,
+        mediaType: MediaLibrary.MediaType.photo,
+        sortBy: [MediaLibrary.SortBy.creationTime],
+      }).then((data) => {
+        setPhotos(data.assets);
+        setAfter(data.endCursor);
+        setHasNext(data.hasNextPage);
+      });
+    }
+  }, [status, setPhotos]);
 
   useEffect(() => {
     if (!init && isVisible && assets.length > 0) {

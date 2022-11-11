@@ -54,7 +54,9 @@ const StoreProductRegistrationScreen: React.FC<
 
   const buttonDisabled = useMemo<boolean>(
     () =>
-      name.trim().length === 0 || price.trim().length === 0 || isNaN(+price),
+      name.trim().length === 0 ||
+      price.trim().length === 0 ||
+      isNaN(+price.replaceAll(',', '')),
     [name, price]
   );
 
@@ -68,8 +70,10 @@ const StoreProductRegistrationScreen: React.FC<
         description: await Promise.all(
           description.map(async (asset) => await generateRNFile(asset))
         ),
-        price: +price,
-        quantity: isNaN(+quantity) ? null : +quantity,
+        price: +price.replaceAll(',', ''),
+        quantity: isNaN(+quantity.replaceAll(',', ''))
+          ? null
+          : +quantity.replaceAll(',', ''),
       },
     });
 

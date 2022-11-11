@@ -8,10 +8,11 @@ import { GET_MANAGED_STORE } from '@/operations/store/query/GetManagedStore';
 import { Store } from '@/domain/store';
 import ProfileHomeHeader from '@/screens/profile/component/header/ProfileHomeHeader';
 import ManagedStoreItem from '@/screens/profile/component/ManagedStoreItem';
-import ProfileHomeMenu from '@/screens/profile/component/ProfileHomeMenu';
+import ProfileHeaderRight from '@/screens/profile/component/header/ProfileHeaderRight';
 
 export const ProfileHomeScreenOptions: StackNavigationOptions = {
-  header: () => <ProfileHomeHeader />,
+  title: '내 프로필',
+  headerRight: () => <ProfileHeaderRight />,
 };
 
 interface ProfileHomeScreenProps {}
@@ -39,7 +40,7 @@ const ProfileHomeScreen: React.FC<ProfileHomeScreenProps> = () => {
     []
   );
 
-  const listHeaderComponent = useCallback(() => <ProfileHomeMenu />, []);
+  const listHeaderComponent = useCallback(() => <ProfileHomeHeader />, []);
 
   const onEndReached = useCallback(() => {
     if (data?.managedStore.length % 10 === 0) {

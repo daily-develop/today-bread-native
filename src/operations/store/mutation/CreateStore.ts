@@ -55,7 +55,7 @@ export const CREATE_STORE = (options?: MutationHookOptions<Data, Variables>) =>
       cache.updateQuery<GetManagedStoreData, GetManagedStoreVariable>(
         { query: GET_MANAGED_STORE_GQL },
         (prev) => ({
-          managedStore: [...prev.managedStore, data.createStore],
+          managedStore: [...(prev?.managedStore ?? []), data.createStore],
         })
       );
     },
