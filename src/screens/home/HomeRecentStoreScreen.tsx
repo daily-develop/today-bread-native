@@ -5,36 +5,31 @@ import {
   SafeAreaView,
   StyleSheet,
 } from 'react-native';
-import {
-  CommonActions,
-  useFocusEffect,
-  useNavigation,
-} from '@react-navigation/native';
+import { CommonActions, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationOptions } from '@react-navigation/stack';
 
 import { mainBottomNavigationVisibleVar } from '@/stores/common';
 import { HomeNavigations, HomeStackParamProps } from '@/navigations/stack/home';
 import { GET_STORES } from '@/operations/store/query/GetStores';
 import { Store } from '@/domain/store';
-import StoreItem from '@/components/store/StoreItem';
 import { StoreNavigations } from '@/navigations/stack/store';
-
-type navigationProp =
-  HomeStackParamProps<HomeNavigations.RecentStore>['navigation'];
+import StoreItem from '@/components/store/StoreItem';
 
 export const HomeRecentStoreScreenOptions: StackNavigationOptions = {
   title: '최신 베이커리',
   headerTitleAlign: 'left',
 };
 
-interface HomeRecentStoreScreenProps {}
+interface HomeRecentStoreScreenProps {
+  navigation: HomeStackParamProps<HomeNavigations.RecentStore>['navigation'];
+}
 
-const HomeRecentStoreScreen: React.FC<HomeRecentStoreScreenProps> = ({}) => {
+const HomeRecentStoreScreen: React.FC<HomeRecentStoreScreenProps> = ({
+  navigation,
+}) => {
   useFocusEffect(() => {
     mainBottomNavigationVisibleVar(false);
   });
-
-  const navigation = useNavigation<navigationProp>();
 
   const [getStores, { data, fetchMore }] = GET_STORES();
 

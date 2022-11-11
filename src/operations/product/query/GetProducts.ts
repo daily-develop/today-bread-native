@@ -1,20 +1,26 @@
 import { gql, LazyQueryHookOptions, useLazyQuery } from '@apollo/client';
 import { PRODUCT_FRAGMENT_GQL } from '@/operations/product/fragment';
 
-import { Product } from '@/domain/product';
+import { BreadType, Product } from '@/domain/product';
 
 export type Data = Record<'products', Product[]>;
 
 export interface Variable {
   storeId?: string;
+  breadType?: BreadType;
   page?: number;
   take?: number;
 }
 
 export const GET_PRODUCTS_GQL = gql`
   ${PRODUCT_FRAGMENT_GQL}
-  query products($storeId: ID, $page: Int, $take: Int) {
-    products(storeId: $storeId, page: $page, take: $take) {
+  query products($storeId: ID, $breadType: BreadType, $page: Int, $take: Int) {
+    products(
+      storeId: $storeId
+      breadType: $breadType
+      page: $page
+      take: $take
+    ) {
       ...ProductFragment
     }
   }

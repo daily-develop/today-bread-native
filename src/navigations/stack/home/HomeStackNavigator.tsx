@@ -10,6 +10,9 @@ import {
 import { stackNavigationOptions } from '@/constants/navigation.options';
 
 import HomeScreen, { HomeScreenOptions } from '@/screens/home/HomeScreen';
+import HomeCategoryScreen, {
+  HomeCategoryScreenOptions,
+} from '@/screens/home/HomeCategoryScreen';
 import StoreDetailStackNavigator, {
   StoreDetailStackNavigatorOptions,
 } from '@/navigations/stack/store/StoreDetailStackNavigator';
@@ -35,6 +38,11 @@ const HomeStackNavigator: React.FC = () => {
         name={HomeNavigations.Home}
         component={HomeScreen}
         options={HomeScreenOptions}
+      />
+      <Stack.Screen
+        name={HomeNavigations.Category}
+        component={HomeCategoryScreen}
+        options={HomeCategoryScreenOptions}
       />
       <Stack.Screen
         name={HomeNavigations.Product}
