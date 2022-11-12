@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Dimensions,
   GestureResponderEvent,
@@ -33,6 +33,8 @@ import CustomButton from '@/components/CustomButton';
 import Conditional from '@/hocs/Conditional';
 import { useFocusEffect } from '@react-navigation/native';
 import { mainBottomNavigationVisibleVar } from '@/stores/common';
+import { CREATE_ORDER } from '@/operations/order/mutation/CreateOrder';
+import { HAS_ORDER } from '@/operations/order/query/HasOrder';
 
 export const StoreProductHomeScreenOptions: StackNavigationOptions = {
   title: '',
@@ -54,9 +56,14 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
   const [getProduct, { data }] = GET_PRODUCT({
     variables: { productId: route.params.productId },
   });
+  const [hasOrder, { data: hasOrderData }] = HAS_ORDER({
+    variables: { productId: route.params.productId },
+  });
+  const [createOrder] = CREATE_ORDER();
 
   useEffect(() => {
     getProduct();
+    hasOrder();
   }, []);
 
   const productDetailHeaderHeight = useReactiveVar<number>(
@@ -64,8 +71,15 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
   );
 
   const [headerHeight, setHeaderHeight] = useState<number | null>(null);
-  const height = useSharedValue<number | null>(null);
   const [touchStarted, setTouchStarted] = useState<number>(0);
+  const height = useSharedValue<number | null>(null);
+
+  const subscribeButtonVisible = useMemo<boolean>(
+    () =>
+      !!data?.product?.store?.isManager !== true &&
+      hasOrderData?.hasOrder !== true,
+    [data, hasOrderData]
+  );
 
   const headerAnimatedStyle = useAnimatedStyle(() => ({
     ...(height.value !== null
@@ -113,7 +127,20 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
     }
   }, [navigation, data?.product?.store?.id]);
 
-  const handleSubscribe = useCallback(() => {}, []);
+  const handleSubscribe = useCallback(async () => {
+    if (!!data?.product?.id) {
+      const {
+        data: {
+          createOrder: { orderUrl, orderSecret },
+        },
+      } = await createOrder({ variables: { productId: data?.product?.id } });
+
+      navigation.push(StoreDetailNavigations.Subscribe, {
+        orderUrl,
+        orderSecret,
+      });
+    }
+  }, [navigation, data]);
 
   return (
     <Animated.View style={styles.container}>
@@ -169,9 +196,7 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
 
       <ProductTopTabNavigator productId={route.params.productId} />
 
-      <Conditional
-        condition={!!data?.product?.store?.isManager !== true || true}
-      >
+      <Conditional condition={subscribeButtonVisible}>
         <View style={styles.subscribeButtonContainer}>
           <SafeAreaView>
             <CustomButton

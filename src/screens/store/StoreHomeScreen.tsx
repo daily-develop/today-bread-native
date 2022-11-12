@@ -14,7 +14,7 @@ import {
 } from '@/navigations/stack/store';
 
 export const StoreHomeScreenOptions: StackNavigationOptions = {
-  headerTitle: '패키지 리스트',
+  headerTitle: '패키지 랭킹',
   headerTitleAlign: 'left',
 };
 

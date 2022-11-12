@@ -1,24 +1,17 @@
 import { gql, LazyQueryHookOptions, useLazyQuery } from '@apollo/client';
 
 import { Profile } from '@/domain/profile';
+import { PROFILE_FRAGMENT_GQL } from '@/operations/profile/fragment';
 
 export type Data = Record<'me', Profile>;
 
 export interface Variables {}
 
 export const GET_ME_GQL = gql`
+  ${PROFILE_FRAGMENT_GQL}
   query me {
     me {
-      id
-      createdAt
-      updatedAt
-      name
-      phone
-      email
-      postcode
-      address1
-      address2
-      profileImageUrl
+      ...ProfileFragment
     }
   }
 `;

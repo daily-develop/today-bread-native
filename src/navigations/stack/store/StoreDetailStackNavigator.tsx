@@ -24,6 +24,9 @@ import StoreProductHomeScreen, {
 import StoreProductListScreen, {
   StoreProductListScreenOptions,
 } from '@/screens/store/detail/StoreProductListScreen';
+import StoreProductSubscribeScreen, {
+  StoreProductSubscribeScreenOptions,
+} from '@/screens/store/subscribe/StoreProductSubscribeScreen';
 
 type routeProp =
   StoreDetailStackParamProps<StoreDetailNavigations.Home>['route'];
@@ -64,6 +67,11 @@ const StoreDetailStackNavigator: React.FC = () => {
         component={StoreProductListScreen}
         options={StoreProductListScreenOptions}
         initialParams={{ storeId: route.params?.storeId ?? undefined }}
+      />
+      <Stack.Screen
+        name={StoreDetailNavigations.Subscribe}
+        component={StoreProductSubscribeScreen}
+        options={StoreProductSubscribeScreenOptions}
       />
     </Stack.Navigator>
   );

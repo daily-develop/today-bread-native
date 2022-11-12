@@ -1,5 +1,11 @@
 import React, { useMemo } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { StackNavigationOptions } from '@react-navigation/stack';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -33,7 +39,11 @@ const SearchHomeScreen: React.FC<SearchHomeScreenProps> = ({ route }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={Keyboard.dismiss}
+      activeOpacity={1}
+    >
       <Conditional condition={search.trim().length === 0}>
         <View style={styles.emptySearchContainer}>
           <Text style={styles.emptySearchTitle}>
@@ -49,7 +59,7 @@ const SearchHomeScreen: React.FC<SearchHomeScreenProps> = ({ route }) => {
       <Conditional condition={search.trim().length !== 0}>
         <SearchList search={search} />
       </Conditional>
-    </View>
+    </TouchableOpacity>
   );
 };
 
