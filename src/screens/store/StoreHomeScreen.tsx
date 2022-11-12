@@ -5,13 +5,13 @@ import { StackNavigationOptions } from '@react-navigation/stack';
 
 import { mainBottomNavigationVisibleVar } from '@/stores/common';
 import { Product } from '@/domain/product';
-import { GET_PRODUCTS } from '@/operations/product/query/GetProducts';
-import ProductItem from '@/components/product/ProductItem';
+import { GET_PRODUCTS_RANKING } from '@/operations/product/query/GetProductsRanking';
 import {
   StoreDetailNavigations,
   StoreNavigations,
   StoreStackParamProps,
 } from '@/navigations/stack/store';
+import ProductItem from '@/components/product/ProductItem';
 
 export const StoreHomeScreenOptions: StackNavigationOptions = {
   headerTitle: '패키지 랭킹',
@@ -27,14 +27,15 @@ const StoreHomeScreen: React.FC<StoreHomeScreenProps> = ({ navigation }) => {
     mainBottomNavigationVisibleVar(true);
   });
 
-  const [getProducts, { data, fetchMore, refetch }] = GET_PRODUCTS({
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getProductsRanking, { data, fetchMore, refetch }] =
+    GET_PRODUCTS_RANKING({
+      fetchPolicy: 'cache-and-network',
+    });
 
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   useEffect(() => {
-    getProducts({
+    getProductsRanking({
       variables: {
         page: 1,
         take: 10,
@@ -69,18 +70,21 @@ const StoreHomeScreen: React.FC<StoreHomeScreenProps> = ({ navigation }) => {
   );
 
   const onEndReached = useCallback(() => {
-    if (data?.products.length % 10 === 0) {
+    if (data?.productsRanking.length % 10 === 0) {
       fetchMore({
         variables: {
-          page: Math.floor(data?.products.length / 10) + 1,
+          page: Math.floor(data?.productsRanking.length / 10) + 1,
           take: 10,
         },
         updateQuery: (prev, { fetchMoreResult }) => ({
-          products: [...(prev?.products ?? []), ...fetchMoreResult.products],
+          productsRanking: [
+            ...(prev?.productsRanking ?? []),
+            ...fetchMoreResult.productsRanking,
+          ],
         }),
       });
     }
-  }, [data?.products.length]);
+  }, [data?.productsRanking.length]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -93,7 +97,7 @@ const StoreHomeScreen: React.FC<StoreHomeScreenProps> = ({ navigation }) => {
 
   return (
     <FlatList<Product>
-      data={data?.products ?? []}
+      data={data?.productsRanking ?? []}
       keyExtractor={keyExtractor}
       renderItem={renderItem}
       showsVerticalScrollIndicator={false}
