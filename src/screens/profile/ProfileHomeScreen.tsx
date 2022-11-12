@@ -9,6 +9,7 @@ import { Store } from '@/domain/store';
 import ProfileHomeHeader from '@/screens/profile/component/header/ProfileHomeHeader';
 import ManagedStoreItem from '@/screens/profile/component/ManagedStoreItem';
 import ProfileHeaderRight from '@/screens/profile/component/header/ProfileHeaderRight';
+import _ from 'lodash';
 
 export const ProfileHomeScreenOptions: StackNavigationOptions = {
   title: '내 프로필',
@@ -50,10 +51,10 @@ const ProfileHomeScreen: React.FC<ProfileHomeScreenProps> = () => {
           take: 10,
         },
         updateQuery: (prev, { fetchMoreResult }) => ({
-          managedStore: [
-            ...(prev.managedStore ?? []),
-            ...fetchMoreResult.managedStore,
-          ],
+          managedStore: _(prev?.managedStore ?? [])
+            .unionBy(fetchMoreResult?.managedStore, 'id')
+            .orderBy((item) => item.createdAt, ['desc'])
+            .value(),
         }),
       });
     }

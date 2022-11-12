@@ -10,6 +10,7 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import { StackNavigationOptions } from '@react-navigation/stack';
 import { Feather, Ionicons } from '@expo/vector-icons';
+import _ from 'lodash';
 
 import {
   StoreDetailNavigations,
@@ -90,7 +91,10 @@ const StoreDetailHomeScreen: React.FC<StoreDetailHomeScreenProps> = ({
           take: 10,
         },
         updateQuery: (prev, { fetchMoreResult }) => ({
-          products: [...(prev?.products ?? []), ...fetchMoreResult.products],
+          products: _(prev?.products ?? [])
+            .unionBy(fetchMoreResult?.products, 'id')
+            .orderBy((item) => item.createdAt, ['desc'])
+            .value(),
         }),
       });
     }

@@ -12,6 +12,7 @@ import {
   StoreStackParamProps,
 } from '@/navigations/stack/store';
 import ProductItem from '@/components/product/ProductItem';
+import _ from 'lodash';
 
 export const StoreHomeScreenOptions: StackNavigationOptions = {
   headerTitle: '패키지 랭킹',
@@ -77,10 +78,10 @@ const StoreHomeScreen: React.FC<StoreHomeScreenProps> = ({ navigation }) => {
           take: 10,
         },
         updateQuery: (prev, { fetchMoreResult }) => ({
-          productsRanking: [
-            ...(prev?.productsRanking ?? []),
-            ...fetchMoreResult.productsRanking,
-          ],
+          productsRanking: _(prev?.productsRanking ?? [])
+            .unionBy(fetchMoreResult?.productsRanking, 'id')
+            .orderBy((item) => item.score, ['desc'])
+            .value(),
         }),
       });
     }

@@ -14,6 +14,7 @@ import { StoreDetailNavigations } from '@/navigations/stack/store';
 import { getBreadTypeName, Product } from '@/domain/product';
 import { GET_PRODUCTS } from '@/operations/product/query/GetProducts';
 import ProductItem from '@/components/product/ProductItem';
+import _ from 'lodash';
 
 export const HomeCategoryScreenOptions: StackNavigationOptions = {};
 
@@ -83,7 +84,10 @@ const HomeCategoryScreen: React.FC<HomeCategoryScreenProps> = ({
           take: 10,
         },
         updateQuery: (prev, { fetchMoreResult }) => ({
-          products: [...(prev?.products ?? []), ...fetchMoreResult.products],
+          products: _(prev?.products ?? [])
+            .unionBy(fetchMoreResult?.products, 'id')
+            .orderBy((item) => item.createdAt, ['desc'])
+            .value(),
         }),
       });
     }

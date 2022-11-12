@@ -9,6 +9,7 @@ import {
   SearchStackParamProps,
 } from '@/navigations/stack/search';
 import StoreItem from '@/components/store/StoreItem';
+import _ from 'lodash';
 
 type navigationProp =
   SearchStackParamProps<SearchNavigations.Home>['navigation'];
@@ -56,7 +57,10 @@ const SearchList: React.FC<SearchListProps> = ({ search }) => {
           take: 10,
         },
         updateQuery: (prev, { fetchMoreResult }) => ({
-          stores: [...(prev?.stores ?? []), ...fetchMoreResult.stores],
+          stores: _(prev?.stores ?? [])
+            .unionBy(fetchMoreResult?.stores, 'id')
+            .orderBy((item) => item.createdAt, ['desc'])
+            .value(),
         }),
       });
     }

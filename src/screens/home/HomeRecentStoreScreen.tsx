@@ -13,6 +13,7 @@ import { HomeNavigations, HomeStackParamProps } from '@/navigations/stack/home';
 import { GET_STORES } from '@/operations/store/query/GetStores';
 import { Store } from '@/domain/store';
 import StoreItem from '@/components/store/StoreItem';
+import _ from 'lodash';
 
 export const HomeRecentStoreScreenOptions: StackNavigationOptions = {
   title: '최신 베이커리',
@@ -66,7 +67,10 @@ const HomeRecentStoreScreen: React.FC<HomeRecentStoreScreenProps> = ({
           take: 10,
         },
         updateQuery: (prev, { fetchMoreResult }) => ({
-          stores: [...(prev?.stores ?? []), ...fetchMoreResult.stores],
+          stores: _(prev?.stores ?? [])
+            .unionBy(fetchMoreResult?.stores, 'id')
+            .orderBy((item) => item.createdAt, ['desc'])
+            .value(),
         }),
       });
     }
