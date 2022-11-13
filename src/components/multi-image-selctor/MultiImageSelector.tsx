@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { FlatList, ListRenderItem } from 'react-native';
+import { FlatList, ListRenderItem, StyleSheet } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 
 import MultiImageSelectorItem from '@/components/multi-image-selctor/MultiImageSelectorItem';
@@ -38,6 +38,7 @@ const MultiImageSelector: React.FC<MultiImageSelectorProps> = ({
 
   return (
     <FlatList<MediaLibrary.Asset>
+      style={styles.container}
       data={assets}
       keyExtractor={keyExtractor}
       renderItem={renderItem}
@@ -47,5 +48,11 @@ const MultiImageSelector: React.FC<MultiImageSelectorProps> = ({
     />
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 0,
+  },
+});
 
 export default MultiImageSelector;

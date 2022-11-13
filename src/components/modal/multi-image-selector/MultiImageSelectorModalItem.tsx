@@ -28,7 +28,7 @@ const MultiImageSelectorModalItem: React.FC<
 
   const containerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
-      width: screen.width / 3 - 1,
+      width: screen.width / 3,
       height: screen.width / 3,
     }),
     [screen]

@@ -28,6 +28,7 @@ export enum StoreDetailNavigations {
   Product = 'StoreProduct',
   ProductList = 'StoreProductList',
   Subscribe = 'StoreProductSubscribe',
+  CreateReview = 'StoreCreateReview',
 }
 
 export type StoreDetailStackParamList = {
@@ -40,6 +41,7 @@ export type StoreDetailStackParamList = {
     orderUrl: string;
     orderSecret: string;
   };
+  [StoreDetailNavigations.CreateReview]: { productId: string };
 };
 
 export type StoreDetailStackParamProps<T extends StoreDetailNavigations> =

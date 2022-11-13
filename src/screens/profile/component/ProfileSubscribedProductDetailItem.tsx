@@ -1,11 +1,22 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import { Entypo } from '@expo/vector-icons';
 
 import { Product } from '@/domain/product';
 import { Colors } from '@/constants/color';
+import {
+  ProfileNavigations,
+  ProfileStackParamProps,
+} from '@/navigations/stack/profile';
 import CustomImage from '@/components/CustomImage';
 import SizedBox from '@/components/SizedBox';
-import { Entypo } from '@expo/vector-icons';
+import { StoreDetailNavigations } from '@/navigations/stack/store';
+import { HAS_REVIEW } from '@/operations/review/query/HasReview';
+import Conditional from '@/hocs/Conditional';
+
+type navigationProp =
+  ProfileStackParamProps<ProfileNavigations.Home>['navigation'];
 
 interface ProfileSubscribedProductDetailItemProps {
   product: Product;
@@ -14,6 +25,29 @@ interface ProfileSubscribedProductDetailItemProps {
 const ProfileSubscribedProductDetailItem: React.FC<
   ProfileSubscribedProductDetailItemProps
 > = ({ product }) => {
+  const navigation = useNavigation<navigationProp>();
+
+  const [hasReview, { data }] = HAS_REVIEW({
+    variables: { productId: product.id },
+    fetchPolicy: 'cache-first',
+  });
+
+  useEffect(() => {
+    hasReview();
+  }, []);
+
+  const handleOnPress = useCallback(() => {
+    navigation.dispatch(
+      CommonActions.navigate(ProfileNavigations.Store, {
+        initial: true,
+        screen: StoreDetailNavigations.CreateReview,
+        params: {
+          productId: product.id,
+        },
+      })
+    );
+  }, [navigation, product.id]);
+
   return (
     <View style={styles.container}>
       <CustomImage imageUrl={product.image?.url} width={80} height={80} />
@@ -30,15 +64,20 @@ const ProfileSubscribedProductDetailItem: React.FC<
         <View style={styles.infoContainer}>
           <Text style={styles.price}>{+product.price.toLocaleString()} 원</Text>
 
-          <View style={styles.reviewContainer}>
-            <Text style={styles.review}>리뷰 작성</Text>
+          <Conditional condition={data?.hasReview === false}>
+            <TouchableOpacity
+              onPress={handleOnPress}
+              style={styles.reviewContainer}
+            >
+              <Text style={styles.review}>리뷰 작성</Text>
 
-            <Entypo
-              name="chevron-small-right"
-              size={24}
-              color={Colors.primary}
-            />
-          </View>
+              <Entypo
+                name="chevron-small-right"
+                size={24}
+                color={Colors.primary}
+              />
+            </TouchableOpacity>
+          </Conditional>
         </View>
       </View>
     </View>

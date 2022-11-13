@@ -184,7 +184,6 @@ const MultiImageSelectorModal: React.FC<MultiImageSelectorModalProps> = ({
           />
 
           <FlatList<MediaLibrary.Asset>
-            columnWrapperStyle={styles.container}
             data={photos}
             keyExtractor={keyExtractor}
             renderItem={renderItem}
@@ -213,9 +212,6 @@ const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
     backgroundColor: Colors.white,
-  },
-  container: {
-    justifyContent: 'space-between',
   },
 });
 
