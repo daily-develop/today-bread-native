@@ -9,6 +9,7 @@ import {
   StoreDetailStackParamProps,
 } from '@/navigations/stack/store';
 import { BASE_URL } from '@/constants';
+import { SUCCESS_ORDER } from '@/operations/order/mutation/SuccessOrder';
 
 export const StoreProductSubscribeScreenOptions: StackNavigationOptions = {
   headerShown: false,
@@ -25,6 +26,10 @@ const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage('')`;
 const StoreProductSubscribeScreen: React.FC<
   StoreProductSubscribeScreenProps
 > = ({ navigation, route }) => {
+  const [successOrder] = SUCCESS_ORDER({
+    variables: { orderId: route.params.orderId },
+  });
+
   const source = useMemo<{ uri: string; headers: { [key: string]: string } }>(
     () => ({
       uri: `${route.params.orderUrl}?successUrl=${REDIRECT_URI}`,
@@ -38,6 +43,10 @@ const StoreProductSubscribeScreen: React.FC<
   const handleOnMessage = useCallback(
     (event: WebViewMessageEvent) => {
       if (event.nativeEvent.url.startsWith(REDIRECT_URI)) {
+        if (event.nativeEvent.url.includes('status=success')) {
+          successOrder();
+        }
+
         navigation.goBack();
       }
     },

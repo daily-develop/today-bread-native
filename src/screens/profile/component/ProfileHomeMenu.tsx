@@ -7,6 +7,7 @@ import {
   ProfileNavigations,
   ProfileStackParamProps,
 } from '@/navigations/stack/profile';
+import ProfileSubscribedProductList from '@/screens/profile/component/ProfileSubscribedProductList';
 
 type navigationProp =
   ProfileStackParamProps<ProfileNavigations.Home>['navigation'];
@@ -27,6 +28,21 @@ const ProfileHomeMenu: React.FC<ProfileHomeMenuProps> = ({}) => {
 
   return (
     <View>
+      <View style={styles.menuContainer}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>구독 중인 패키지</Text>
+
+          <TouchableOpacity
+            onPress={handleMenu(ProfileNavigations.SubscribedProduct)}
+            activeOpacity={0.65}
+          >
+            <Text style={styles.more}>더보기</Text>
+          </TouchableOpacity>
+        </View>
+
+        <ProfileSubscribedProductList />
+      </View>
+
       <TouchableOpacity
         style={styles.menuContainer}
         onPress={handleMenu(ProfileNavigations.CreateStore)}
@@ -40,14 +56,24 @@ const ProfileHomeMenu: React.FC<ProfileHomeMenuProps> = ({}) => {
 
 const styles = StyleSheet.create({
   menuContainer: {
-    padding: 20,
+    padding: 16,
     borderBottomWidth: 0.8,
     borderBottomColor: Colors.lightGray,
   },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   title: {
     fontWeight: '600',
-    fontSize: 18,
+    fontSize: 16,
     color: Colors.black,
+  },
+  more: {
+    fontWeight: '400',
+    fontSize: 14,
+    color: Colors.darkGray,
   },
 });
 

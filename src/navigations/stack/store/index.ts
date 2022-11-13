@@ -35,7 +35,11 @@ export type StoreDetailStackParamList = {
   [StoreDetailNavigations.PackageRegistration]: { storeId: string };
   [StoreDetailNavigations.Product]: { productId: string };
   [StoreDetailNavigations.ProductList]: { storeId: string };
-  [StoreDetailNavigations.Subscribe]: { orderUrl: string; orderSecret: string };
+  [StoreDetailNavigations.Subscribe]: {
+    orderId: string;
+    orderUrl: string;
+    orderSecret: string;
+  };
 };
 
 export type StoreDetailStackParamProps<T extends StoreDetailNavigations> =

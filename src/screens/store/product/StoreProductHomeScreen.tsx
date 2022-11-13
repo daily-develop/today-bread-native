@@ -78,7 +78,7 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
     () =>
       !!data?.product?.store?.isManager !== true &&
       hasOrderData?.hasOrder !== true,
-    [data, hasOrderData]
+    [data, hasOrderData?.hasOrder]
   );
 
   const headerAnimatedStyle = useAnimatedStyle(() => ({
@@ -131,11 +131,12 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
     if (!!data?.product?.id) {
       const {
         data: {
-          createOrder: { orderUrl, orderSecret },
+          createOrder: { id, orderUrl, orderSecret },
         },
       } = await createOrder({ variables: { productId: data?.product?.id } });
 
       navigation.push(StoreDetailNavigations.Subscribe, {
+        orderId: id,
         orderUrl,
         orderSecret,
       });
