@@ -4814,6 +4814,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dayjs@npm:^1.11.6":
+  version: 1.11.6
+  resolution: "dayjs@npm:1.11.6"
+  checksum: 18bdfd927009b68eab08dca578e421d4a581cefcbe9337f54c5d9e0d941ffb6b221c4b2c1cab15cdd9d419940e768ac4c984531461a90bbe1c158b75fe160580
+  languageName: node
+  linkType: hard
+
 "dayjs@npm:^1.8.15":
   version: 1.11.5
   resolution: "dayjs@npm:1.11.5"
@@ -10682,6 +10689,7 @@ __metadata:
     apollo-upload-client: ^17.0.0
     axios: ^1.1.2
     babel-plugin-module-resolver: ^4.1.0
+    dayjs: ^1.11.6
     expo: ~46.0.13
     expo-asset: ~8.6.1
     expo-constants: ~13.2.4

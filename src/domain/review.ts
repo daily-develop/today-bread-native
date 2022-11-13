@@ -12,3 +12,8 @@ export interface Review {
   content: string;
   attachment: File[];
 }
+
+export interface ReviewList {
+  content: Review[];
+  totalElement: number;
+}
