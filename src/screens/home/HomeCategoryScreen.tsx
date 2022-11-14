@@ -46,6 +46,7 @@ const HomeCategoryScreen: React.FC<HomeCategoryScreenProps> = ({
     getProducts({
       variables: {
         breadType: route.params.breadType,
+        saleOnly: true,
         page: 1,
         take: 10,
       },

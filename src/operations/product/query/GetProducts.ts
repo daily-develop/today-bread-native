@@ -8,16 +8,24 @@ export type Data = Record<'products', Product[]>;
 export interface Variable {
   storeId?: string;
   breadType?: BreadType;
+  saleOnly: boolean;
   page?: number;
   take?: number;
 }
 
 export const GET_PRODUCTS_GQL = gql`
   ${PRODUCT_FRAGMENT_GQL}
-  query products($storeId: ID, $breadType: BreadType, $page: Int, $take: Int) {
+  query products(
+    $storeId: ID
+    $breadType: BreadType
+    $saleOnly: Boolean!
+    $page: Int
+    $take: Int
+  ) {
     products(
       storeId: $storeId
       breadType: $breadType
+      saleOnly: $saleOnly
       page: $page
       take: $take
     ) {

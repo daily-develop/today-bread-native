@@ -17,6 +17,7 @@ import { mainBottomNavigationVisibleVar } from '@/stores/common';
 import { GET_PRODUCTS } from '@/operations/product/query/GetProducts';
 import { Product } from '@/domain/product';
 import StoreProductItem from '@/screens/store/detail/components/StoreProductItem';
+import { GET_STORE } from '@/operations/store/query/GetStore';
 
 export const StoreProductListScreenOptions: StackNavigationOptions = {
   title: '판매 중인 패키지',
@@ -33,12 +34,21 @@ const StoreProductListScreen: React.FC<StoreProductListScreenProps> = ({
     mainBottomNavigationVisibleVar(false);
   });
 
-  const [getProducts, { data }] = GET_PRODUCTS({
+  const [getStore] = GET_STORE({
     variables: { storeId: route.params.storeId },
   });
 
+  const [getProducts, { data }] = GET_PRODUCTS();
+
   useEffect(() => {
-    getProducts();
+    getStore().then(({ data: storeData }) => {
+      getProducts({
+        variables: {
+          storeId: route.params.storeId,
+          saleOnly: !storeData.store.isManager,
+        },
+      });
+    });
   }, []);
 
   const keyExtractor = useCallback((item: Product) => item.id, []);

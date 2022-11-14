@@ -65,7 +65,9 @@ const StoreDetailHomeScreen: React.FC<StoreDetailHomeScreenProps> = ({
 
   useEffect(() => {
     getStore({ variables: { storeId: route.params.storeId } });
-    getProduct({ variables: { storeId: route.params.storeId } });
+    getProduct({
+      variables: { storeId: route.params.storeId, saleOnly: true },
+    });
   }, [route.params.storeId]);
 
   useEffect(() => {
