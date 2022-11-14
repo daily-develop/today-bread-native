@@ -18,7 +18,7 @@ export const GET_PRODUCTS_GQL = gql`
   query products(
     $storeId: ID
     $breadType: BreadType
-    $saleOnly: Boolean!
+    $saleOnly: Boolean
     $page: Int
     $take: Int
   ) {
