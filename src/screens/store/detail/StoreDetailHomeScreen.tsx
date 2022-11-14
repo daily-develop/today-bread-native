@@ -84,7 +84,7 @@ const StoreDetailHomeScreen: React.FC<StoreDetailHomeScreenProps> = ({
   );
 
   const onEndReached = useCallback(() => {
-    if (productList.length % 10 == 0) {
+    if (productList.length % 10 === 0) {
       fetchMore({
         variables: {
           page: Math.floor(productList.length / 10) + 1,

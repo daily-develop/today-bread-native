@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import { Entypo } from '@expo/vector-icons';
@@ -14,6 +14,7 @@ import SizedBox from '@/components/SizedBox';
 import { StoreDetailNavigations } from '@/navigations/stack/store';
 import { HAS_REVIEW } from '@/operations/review/query/HasReview';
 import Conditional from '@/hocs/Conditional';
+import SubscribeItemMenuModal from '@/screens/profile/component/modal/SubscribeItemMenuModal';
 
 type navigationProp =
   ProfileStackParamProps<ProfileNavigations.Home>['navigation'];
@@ -32,11 +33,17 @@ const ProfileSubscribedProductDetailItem: React.FC<
     fetchPolicy: 'cache-first',
   });
 
+  const [open, setOpen] = useState<boolean>(false);
+
   useEffect(() => {
     hasReview();
   }, []);
 
-  const handleOnPress = useCallback(() => {
+  const handleMenu = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const handleReview = useCallback(() => {
     navigation.dispatch(
       CommonActions.navigate(ProfileNavigations.Store, {
         initial: true,
@@ -50,24 +57,36 @@ const ProfileSubscribedProductDetailItem: React.FC<
 
   return (
     <View style={styles.container}>
-      <CustomImage imageUrl={product.image?.url} width={80} height={80} />
+      <CustomImage
+        style={styles.image}
+        imageUrl={product.image?.url}
+        width={80}
+        height={80}
+      />
 
       <SizedBox width={10} />
 
       <View style={styles.flexContainer}>
-        <Text style={styles.store}>{product.store.name}</Text>
+        <View style={styles.infoContainer}>
+          <Text style={styles.store}>{product.store.name}</Text>
+
+          <TouchableOpacity onPress={handleMenu} activeOpacity={0.8}>
+            <Entypo name="dots-three-vertical" size={13} color="black" />
+          </TouchableOpacity>
+        </View>
 
         <SizedBox height={6} />
 
         <Text style={styles.product}>{product.name}</Text>
 
         <View style={styles.infoContainer}>
-          <Text style={styles.price}>{+product.price.toLocaleString()} 원</Text>
+          <Text style={styles.price}>{product.price.toLocaleString()} 원</Text>
 
           <Conditional condition={data?.hasReview === false}>
             <TouchableOpacity
-              onPress={handleOnPress}
               style={styles.reviewContainer}
+              onPress={handleReview}
+              activeOpacity={0.8}
             >
               <Text style={styles.review}>리뷰 작성</Text>
 
@@ -80,6 +99,8 @@ const ProfileSubscribedProductDetailItem: React.FC<
           </Conditional>
         </View>
       </View>
+
+      <SubscribeItemMenuModal open={open} setOpen={setOpen} product={product} />
     </View>
   );
 };
@@ -89,6 +110,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 16,
     alignItems: 'center',
+  },
+  image: {
+    borderRadius: 5,
   },
   flexContainer: {
     flex: 1,

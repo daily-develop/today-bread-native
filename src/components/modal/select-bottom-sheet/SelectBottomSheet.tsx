@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -26,6 +26,7 @@ interface SelectBottomSheetProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   title: string | JSX.Element;
+  titleAlign?: 'left' | 'center';
   action: BottomSheetButtonProps;
   dismiss?: BottomSheetButtonProps;
   onClose?: () => void;
@@ -36,11 +37,19 @@ const SelectBottomSheet: React.FC<SelectBottomSheetProps> = ({
   open,
   setOpen,
   title,
+  titleAlign = 'center',
   action,
   dismiss = null,
   onClose = () => {},
   onBackdropPress = () => {},
 }) => {
+  const topContainerStyle = useMemo<StyleProp<ViewStyle>>(
+    () => ({
+      alignItems: titleAlign === 'left' ? 'flex-start' : 'center',
+    }),
+    [titleAlign]
+  );
+
   const handleClose = useCallback(() => {
     setOpen(false);
 
@@ -57,7 +66,7 @@ const SelectBottomSheet: React.FC<SelectBottomSheetProps> = ({
       useNativeDriverForBackdrop
     >
       <View style={styles.innerContainer}>
-        <View style={styles.topContainer}>
+        <View style={[styles.topContainer, topContainerStyle]}>
           {typeof title === 'string' ? (
             <Text style={styles.title}>{title}</Text>
           ) : (
@@ -113,7 +122,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   topContainer: {
-    alignItems: 'center',
     justifyContent: 'center',
   },
   title: {

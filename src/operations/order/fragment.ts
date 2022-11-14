@@ -17,5 +17,6 @@ export const ORDER_FRAGMENT_GQL = gql`
     member {
       ...ProfileFragment
     }
+    status
   }
 `;

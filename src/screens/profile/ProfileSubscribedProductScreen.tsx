@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { StackNavigationOptions } from '@react-navigation/stack';
+import _ from 'lodash';
 
 import { mainBottomNavigationVisibleVar } from '@/stores/common';
 import { Product } from '@/domain/product';
@@ -22,7 +23,9 @@ const ProfileSubscribedProductScreen: React.FC<
     mainBottomNavigationVisibleVar(false);
   });
 
-  const [getOrdersWithMember, { data, fetchMore }] = GET_ORDERS_WITH_MEMBER();
+  const [getOrdersWithMember, { data, fetchMore }] = GET_ORDERS_WITH_MEMBER({
+    fetchPolicy: 'cache-and-network',
+  });
 
   const products = useMemo<Product[]>(
     () => (data?.ordersWithMember ?? []).map((it) => it.product),
@@ -46,12 +49,18 @@ const ProfileSubscribedProductScreen: React.FC<
   );
 
   const onEndReached = useCallback(() => {
-    if (data?.ordersWithMember.length % 10 !== 0) {
+    if (data?.ordersWithMember.length % 10 === 0) {
       fetchMore({
         variables: {
           page: Math.floor(data?.ordersWithMember.length / 10) + 1,
           take: 10,
         },
+        updateQuery: (prev, { fetchMoreResult }) => ({
+          ordersWithMember: _(prev?.ordersWithMember ?? [])
+            .unionBy(fetchMoreResult.ordersWithMember, 'id')
+            .orderBy((order) => order.createdAt, ['desc'])
+            .value(),
+        }),
       });
     }
   }, [data?.ordersWithMember.length]);

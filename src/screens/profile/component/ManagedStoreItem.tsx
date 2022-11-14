@@ -24,7 +24,7 @@ const ManagedStoreItem: React.FC<ManagedStoreItemProps> = ({ store }) => {
 
   const handleStoreDetail = useCallback(async () => {
     await navigation.push(ProfileNavigations.Store, { storeId: store.id });
-  }, [navigation, store]);
+  }, [navigation, store.id]);
 
   const handlePackageRegistration = useCallback(async () => {
     navigation.dispatch(
@@ -34,7 +34,7 @@ const ManagedStoreItem: React.FC<ManagedStoreItemProps> = ({ store }) => {
         screen: StoreDetailNavigations.PackageRegistration,
       })
     );
-  }, [navigation, store]);
+  }, [navigation, store.id]);
 
   const handlePackageList = useCallback(() => {
     navigation.dispatch(
@@ -44,7 +44,13 @@ const ManagedStoreItem: React.FC<ManagedStoreItemProps> = ({ store }) => {
         screen: StoreDetailNavigations.ProductList,
       })
     );
-  }, [navigation]);
+  }, [navigation, store.id]);
+
+  const handleOrderList = useCallback(() => {
+    navigation.push(ProfileNavigations.StoreOrderList, {
+      storeId: store.id,
+    });
+  }, [navigation, store.id]);
 
   return (
     <View style={styles.container}>
@@ -85,10 +91,14 @@ const ManagedStoreItem: React.FC<ManagedStoreItemProps> = ({ store }) => {
           <Text style={styles.buttonActionText}>조회</Text>
         </TouchableOpacity>
 
-        <View style={styles.buttonContainer}>
-          <Text style={styles.buttonText}>패키지</Text>
-          <Text style={styles.buttonActionText}>삭제</Text>
-        </View>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={handleOrderList}
+          activeOpacity={0.65}
+        >
+          <Text style={styles.buttonText}>주문</Text>
+          <Text style={styles.buttonActionText}>조회</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

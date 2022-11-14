@@ -1,5 +1,6 @@
 import { InMemoryCache, Reference } from '@apollo/client';
 import _ from 'lodash';
+import { OrderStatus } from '@/domain/order';
 
 const cache = new InMemoryCache({
   typePolicies: {
@@ -19,7 +20,6 @@ const cache = new InMemoryCache({
         },
         ordersWithMember: {
           keyArgs: false,
-
           merge: (
             existing: Reference[] = [],
             incoming: Reference[],
@@ -27,6 +27,9 @@ const cache = new InMemoryCache({
           ) =>
             _(existing)
               .unionBy(incoming, '__ref')
+              .filter(
+                (order) => readField('status', order) === OrderStatus.SUCCESS
+              )
               .orderBy((order) => readField('createdAt', order), ['desc'])
               .value(),
         },

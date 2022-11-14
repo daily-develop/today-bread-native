@@ -1,56 +1,71 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { Colors } from '@/constants/color';
 import { Product } from '@/domain/product';
 import SelectModal, {
   ModalItemProps,
 } from '@/components/modal/select-modal/SelectModal';
-import { STOP_PRODUCT } from '@/operations/product/mutation/StopProduct';
 import SelectBottomSheet, {
   BottomSheetButtonProps,
 } from '@/components/modal/select-bottom-sheet/SelectBottomSheet';
-import { StyleSheet, Text } from 'react-native';
+import SizedBox from '@/components/SizedBox';
+import { CANCEL_ORDER } from '@/operations/order/mutation/CancelOrder';
+import { GET_ORDERS_WITH_MEMBER } from '@/operations/order/query/GetOrdersWithMember';
 
-interface StoreProductItemModalProps {
-  product: Product;
+interface SubscribeItemMenuModalProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  product: Product;
 }
 
-const StoreProductItemModal: React.FC<StoreProductItemModalProps> = ({
-  product,
+const SubscribeItemMenuModal: React.FC<SubscribeItemMenuModalProps> = ({
   open,
   setOpen,
+  product,
 }) => {
-  const [stopProduct] = STOP_PRODUCT({ variables: { productId: product.id } });
+  const [getOrdersWithMember, { data }] = GET_ORDERS_WITH_MEMBER({
+    fetchPolicy: 'cache-only',
+  });
+  const [cancelOrder] = CANCEL_ORDER();
 
-  const [openBottomSheet, setOpenBottomSheet] = useState<boolean>(false);
+  const [bottomOpen, setBottomOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    getOrdersWithMember();
+  }, []);
 
   const items: ModalItemProps[] = [
     {
-      label: '판매 종료',
+      label: '구독 취소',
       color: Colors.primary,
       onPress: () => {
         setOpen(false);
 
         setTimeout(() => {
-          setOpenBottomSheet(true);
+          setBottomOpen(true);
         }, 360);
       },
     },
   ];
 
   const action: BottomSheetButtonProps = {
-    label: '네, 종료할래요.',
+    label: '네, 취소할래요.',
     onPress: () => {
-      stopProduct().then(() => setOpenBottomSheet(false));
+      cancelOrder({
+        variables: {
+          orderId: data?.ordersWithMember?.find(
+            (it) => it.product.id === product.id
+          ).id,
+        },
+      }).then(() => setBottomOpen(false));
     },
   };
 
   const dismiss: BottomSheetButtonProps = {
     label: '아니요',
     onPress: () => {
-      setOpenBottomSheet(false);
+      setBottomOpen(false);
 
       setTimeout(() => {
         setOpen(true);
@@ -63,7 +78,7 @@ const StoreProductItemModal: React.FC<StoreProductItemModalProps> = ({
   }, []);
 
   const handleBottomOnBackdropPress = useCallback(() => {
-    setOpenBottomSheet(false);
+    setBottomOpen(false);
 
     setTimeout(() => {
       setOpen(true);
@@ -81,14 +96,20 @@ const StoreProductItemModal: React.FC<StoreProductItemModalProps> = ({
       />
 
       <SelectBottomSheet
-        open={openBottomSheet}
-        setOpen={setOpenBottomSheet}
+        open={bottomOpen}
+        setOpen={setBottomOpen}
         title={
-          <Text style={styles.bottomSheetTitle}>
-            패키지 판매를 정말{' '}
-            <Text style={styles.buttonSheetTitlePrimary}>종료</Text>하시겠어요?
-          </Text>
+          <View>
+            <Text style={styles.title}>패키지 구독을</Text>
+
+            <SizedBox height={4} />
+
+            <Text style={styles.title}>
+              정말 <Text style={styles.primary}>취소</Text>하시겠어요?
+            </Text>
+          </View>
         }
+        titleAlign="left"
         action={action}
         dismiss={dismiss}
         onBackdropPress={handleBottomOnBackdropPress}
@@ -98,14 +119,14 @@ const StoreProductItemModal: React.FC<StoreProductItemModalProps> = ({
 };
 
 const styles = StyleSheet.create({
-  bottomSheetTitle: {
+  title: {
     fontWeight: '800',
-    fontSize: 20,
+    fontSize: 24,
     color: Colors.black,
   },
-  buttonSheetTitlePrimary: {
+  primary: {
     color: Colors.primary,
   },
 });
 
-export default StoreProductItemModal;
+export default SubscribeItemMenuModal;

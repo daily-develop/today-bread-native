@@ -10,6 +10,7 @@ export enum ProfileNavigations {
   CreateStore = 'ProfileCreateStore',
   Store = 'ProfileStore',
   SubscribedProduct = 'ProfileSubscribeProduct',
+  StoreOrderList = 'ProfileStoreOrderList',
 }
 
 export type ProfileStackParamList = {
@@ -17,6 +18,7 @@ export type ProfileStackParamList = {
   [ProfileNavigations.CreateStore]: undefined;
   [ProfileNavigations.Store]: { storeId: string };
   [ProfileNavigations.SubscribedProduct]: undefined;
+  [ProfileNavigations.StoreOrderList]: { storeId: string };
 };
 
 export type ProfileStackParamProps<T extends ProfileNavigations> =

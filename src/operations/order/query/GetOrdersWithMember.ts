@@ -6,8 +6,8 @@ import { Order } from '@/domain/order';
 export type Data = Record<'ordersWithMember', Order[]>;
 
 export interface Variables {
-  page: number;
-  take: number;
+  page?: number;
+  take?: number;
 }
 
 export const GET_ORDERS_WITH_MEMBER_GQL = gql`
