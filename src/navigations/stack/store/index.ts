@@ -1,4 +1,4 @@
-import { StackScreenProps } from '@react-navigation/stack';
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { CompositeScreenProps } from '@react-navigation/native';
 import {
   MainBottomTabParamProps,
@@ -24,14 +24,28 @@ export type StoreStackParamProps<T extends StoreNavigations> =
 /* Store Detail */
 export enum StoreDetailNavigations {
   Home = 'StoreDetailHome',
+  PackageRegistration = 'StorePackageRegistration',
+  Product = 'StoreProduct',
+  ProductList = 'StoreProductList',
+  Subscribe = 'StoreProductSubscribe',
+  CreateReview = 'StoreCreateReview',
 }
 
 export type StoreDetailStackParamList = {
   [StoreDetailNavigations.Home]: { storeId: string };
+  [StoreDetailNavigations.PackageRegistration]: { storeId: string };
+  [StoreDetailNavigations.Product]: { productId: string };
+  [StoreDetailNavigations.ProductList]: { storeId: string };
+  [StoreDetailNavigations.Subscribe]: {
+    orderId: string;
+    orderUrl: string;
+    orderSecret: string;
+  };
+  [StoreDetailNavigations.CreateReview]: { productId: string };
 };
 
 export type StoreDetailStackParamProps<T extends StoreDetailNavigations> =
   CompositeScreenProps<
     StackScreenProps<StoreDetailStackParamList, T>,
-    { navigation: any }
+    { navigation: StackNavigationProp<any> }
   >;

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 
 import { Store } from '@/domain/store';
@@ -10,6 +10,7 @@ import {
   ProfileStackParamProps,
 } from '@/navigations/stack/profile';
 import CustomImage from '@/components/CustomImage';
+import { StoreDetailNavigations } from '@/navigations/stack/store';
 
 type navigationProp =
   ProfileStackParamProps<ProfileNavigations.Home>['navigation'];
@@ -23,7 +24,33 @@ const ManagedStoreItem: React.FC<ManagedStoreItemProps> = ({ store }) => {
 
   const handleStoreDetail = useCallback(async () => {
     await navigation.push(ProfileNavigations.Store, { storeId: store.id });
-  }, [navigation, store]);
+  }, [navigation, store.id]);
+
+  const handlePackageRegistration = useCallback(async () => {
+    navigation.dispatch(
+      CommonActions.navigate(ProfileNavigations.Store, {
+        storeId: store.id,
+        initial: true,
+        screen: StoreDetailNavigations.PackageRegistration,
+      })
+    );
+  }, [navigation, store.id]);
+
+  const handlePackageList = useCallback(() => {
+    navigation.dispatch(
+      CommonActions.navigate(ProfileNavigations.Store, {
+        storeId: store.id,
+        initial: true,
+        screen: StoreDetailNavigations.ProductList,
+      })
+    );
+  }, [navigation, store.id]);
+
+  const handleOrderList = useCallback(() => {
+    navigation.push(ProfileNavigations.StoreOrderList, {
+      storeId: store.id,
+    });
+  }, [navigation, store.id]);
 
   return (
     <View style={styles.container}>
@@ -46,20 +73,32 @@ const ManagedStoreItem: React.FC<ManagedStoreItemProps> = ({ store }) => {
       </TouchableOpacity>
 
       <View style={styles.bottomContainer}>
-        <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={handlePackageRegistration}
+          activeOpacity={0.65}
+        >
           <Text style={styles.buttonText}>패키지</Text>
           <Text style={styles.buttonActionText}>등록</Text>
-        </View>
+        </TouchableOpacity>
 
-        <View style={[styles.buttonContainer, styles.buttonBorder]}>
+        <TouchableOpacity
+          style={[styles.buttonContainer, styles.buttonBorder]}
+          onPress={handlePackageList}
+          activeOpacity={0.65}
+        >
           <Text style={styles.buttonText}>패키지</Text>
           <Text style={styles.buttonActionText}>조회</Text>
-        </View>
+        </TouchableOpacity>
 
-        <View style={styles.buttonContainer}>
-          <Text style={styles.buttonText}>패키지</Text>
-          <Text style={styles.buttonActionText}>삭제</Text>
-        </View>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={handleOrderList}
+          activeOpacity={0.65}
+        >
+          <Text style={styles.buttonText}>주문</Text>
+          <Text style={styles.buttonActionText}>조회</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

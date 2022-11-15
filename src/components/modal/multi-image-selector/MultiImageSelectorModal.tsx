@@ -39,6 +39,7 @@ const MultiImageSelectorModal: React.FC<MultiImageSelectorModalProps> = ({
 
   const previewHeight = useSharedValue(0);
 
+  const [init, setInit] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [photos, setPhotos] = useState<MediaLibrary.Asset[]>([]);
   const [selected, setSelected] = useState<MediaLibrary.Asset[]>(assets);
@@ -57,22 +58,31 @@ const MultiImageSelectorModal: React.FC<MultiImageSelectorModalProps> = ({
   }, [status?.granted, requestPermission]);
 
   useEffect(() => {
-    MediaLibrary.getAssetsAsync({
-      first: 60,
-      mediaType: MediaLibrary.MediaType.photo,
-      sortBy: [MediaLibrary.SortBy.creationTime],
-    }).then((data) => {
-      setPhotos(data.assets);
-      setAfter(data.endCursor);
-      setHasNext(data.hasNextPage);
-    });
-  }, [setPhotos]);
+    if (status?.granted) {
+      MediaLibrary.getAssetsAsync({
+        first: 60,
+        mediaType: MediaLibrary.MediaType.photo,
+        sortBy: [MediaLibrary.SortBy.creationTime],
+      }).then((data) => {
+        setPhotos(data.assets);
+        setAfter(data.endCursor);
+        setHasNext(data.hasNextPage);
+      });
+    }
+  }, [status, setPhotos]);
 
   useEffect(() => {
-    if (isVisible && assets.length > 0 && assets.length !== selected.length) {
-      setAssets(assets);
+    if (!init && isVisible && assets.length > 0) {
+      setInit(true);
+      setSelected(assets);
     }
-  }, [isVisible, assets, setSelected]);
+  }, [init, isVisible, assets, selected.length, setSelected]);
+
+  useEffect(() => {
+    if (!isVisible && init) {
+      setInit(false);
+    }
+  }, [isVisible, init]);
 
   useAnimatedReaction(
     () => selected.length > 0,
@@ -100,8 +110,8 @@ const MultiImageSelectorModal: React.FC<MultiImageSelectorModalProps> = ({
   const selectImage = useCallback(
     (asset: MediaLibrary.Asset) => {
       setSelected((prev) => {
-        if (prev.map((it) => it.uri).includes(asset.uri)) {
-          return prev.filter((it) => it.uri !== asset.uri);
+        if (!!prev.find((it) => it.id === asset.id)) {
+          return prev.filter((it) => it.id !== asset.id);
         } else if (maxAssets === undefined || prev.length < maxAssets) {
           return [...prev, asset];
         } else {
@@ -118,7 +128,7 @@ const MultiImageSelectorModal: React.FC<MultiImageSelectorModalProps> = ({
     ({ item }) => (
       <MultiImageSelectorModalItem
         asset={item}
-        sequence={selected.indexOf(item)}
+        sequence={selected.findIndex((it) => it.id === item.id)}
         select={selectImage}
       />
     ),
@@ -174,7 +184,6 @@ const MultiImageSelectorModal: React.FC<MultiImageSelectorModalProps> = ({
           />
 
           <FlatList<MediaLibrary.Asset>
-            columnWrapperStyle={styles.container}
             data={photos}
             keyExtractor={keyExtractor}
             renderItem={renderItem}
@@ -203,9 +212,6 @@ const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
     backgroundColor: Colors.white,
-  },
-  container: {
-    justifyContent: 'space-between',
   },
 });
 

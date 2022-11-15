@@ -3,9 +3,10 @@ export interface Profile {
   createdAt: Date;
   updatedAt: Date;
   name: string;
-  nickname: string;
   phone: string;
   email: string;
-  address: string;
+  postcode: string;
+  address1: string;
+  address2: string;
   profileImageUrl: string;
 }

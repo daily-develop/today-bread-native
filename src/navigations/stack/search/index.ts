@@ -7,10 +7,12 @@ import {
 
 export enum SearchNavigations {
   Home = 'SearchHome',
+  Store = 'SearchStore',
 }
 
 export type SearchStackParamList = {
-  [SearchNavigations.Home]: undefined;
+  [SearchNavigations.Home]: { search?: string };
+  [SearchNavigations.Store]: { storeId: string };
 };
 
 export type SearchStackParamProps<T extends SearchNavigations> =

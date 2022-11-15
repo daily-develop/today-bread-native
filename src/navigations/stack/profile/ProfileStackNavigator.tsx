@@ -18,6 +18,12 @@ import CreateStoreScreen, {
 import StoreDetailStackNavigator, {
   StoreDetailStackNavigatorOptions,
 } from '@/navigations/stack/store/StoreDetailStackNavigator';
+import ProfileSubscribedProductScreen, {
+  ProfileSubscribedProductScreenOptions,
+} from '@/screens/profile/ProfileSubscribedProductScreen';
+import ProfileStoreOrderListScreen, {
+  ProfileStoreOrderListScreenOptions,
+} from '@/screens/profile/ProfileStoreOrderListScreen';
 
 export const ProfileStackNavigatorOptions: BottomTabNavigationOptions = {
   tabBarIcon: ({ size, color }) => {
@@ -47,6 +53,16 @@ const ProfileStackNavigator: React.FC = () => {
         name={ProfileNavigations.Store}
         component={StoreDetailStackNavigator}
         options={StoreDetailStackNavigatorOptions}
+      />
+      <Stack.Screen
+        name={ProfileNavigations.SubscribedProduct}
+        component={ProfileSubscribedProductScreen}
+        options={ProfileSubscribedProductScreenOptions}
+      />
+      <Stack.Screen
+        name={ProfileNavigations.StoreOrderList}
+        component={ProfileStoreOrderListScreen}
+        options={ProfileStoreOrderListScreenOptions}
       />
     </Stack.Navigator>
   );

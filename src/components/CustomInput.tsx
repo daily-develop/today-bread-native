@@ -22,6 +22,7 @@ interface CustomInputProps {
   titleStyle?: StyleProp<TextStyle>;
   inputStyle?: StyleProp<TextStyle>;
   props?: TextInputProps;
+  editable?: boolean;
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({
@@ -32,11 +33,13 @@ const CustomInput: React.FC<CustomInputProps> = ({
   titleStyle,
   inputStyle,
   props,
+  editable = true,
 }) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const borderColorStyle = useMemo<StyleProp<TextStyle>>(
     () => ({
+      borderBottomWidth: 1,
       borderBottomColor: isFocused ? Colors.primary : Colors.gray,
     }),
     [isFocused]
@@ -60,22 +63,32 @@ const CustomInput: React.FC<CustomInputProps> = ({
         <Text style={[styles.title, titleStyle]}>{title}</Text>
       </Conditional>
 
-      <TextInput
-        style={[styles.input, borderColorStyle, inputStyle]}
-        value={text}
-        onChangeText={handleOnChangeText}
-        onFocus={handleOnFocus}
-        onBlur={handleOnBlur}
-        selectionColor={Colors.primary}
-        {...props}
-      />
+      <Conditional condition={editable}>
+        <TextInput
+          style={[styles.input, borderColorStyle, inputStyle]}
+          value={text}
+          onChangeText={handleOnChangeText}
+          onFocus={handleOnFocus}
+          onBlur={handleOnBlur}
+          selectionColor={Colors.primary}
+          editable={editable}
+          focusable={editable}
+          {...props}
+        />
+      </Conditional>
+
+      <Conditional condition={!editable}>
+        <View style={borderColorStyle}>
+          <Text style={[styles.input, inputStyle]}>{text}</Text>
+        </View>
+      </Conditional>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    flex: 1,
   },
   title: {
     fontWeight: '600',

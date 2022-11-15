@@ -11,7 +11,9 @@ export interface Variables {
   name: string;
   email: string;
   phone: string;
-  address: string;
+  postcode: string;
+  address1: string;
+  address2: string;
   profileImage: ReactNativeFile;
 }
 
@@ -22,7 +24,9 @@ export const SIGN_UP_GQL = gql`
     $name: String!
     $email: String!
     $phone: String!
-    $address: String!
+    $postcode: String!
+    $address1: String!
+    $address2: String!
     $profileImage: Upload
   ) {
     signUp(
@@ -32,7 +36,9 @@ export const SIGN_UP_GQL = gql`
         name: $name
         email: $email
         phone: $phone
-        address: $address
+        postcode: $postcode
+        address1: $address1
+        address2: $address2
         profileImage: $profileImage
       }
     ) {

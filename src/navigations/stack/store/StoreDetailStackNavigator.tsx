@@ -15,6 +15,21 @@ import { stackNavigationOptions } from '@/constants/navigation.options';
 import StoreDetailHomeScreen, {
   StoreDetailHomeScreenOptions,
 } from '@/screens/store/detail/StoreDetailHomeScreen';
+import StoreProductRegistrationScreen, {
+  StoreProductionRegistrationScreenOptions,
+} from '@/screens/store/detail/StoreProductRegistrationScreen';
+import StoreProductHomeScreen, {
+  StoreProductHomeScreenOptions,
+} from '@/screens/store/product/StoreProductHomeScreen';
+import StoreProductListScreen, {
+  StoreProductListScreenOptions,
+} from '@/screens/store/detail/StoreProductListScreen';
+import StoreProductSubscribeScreen, {
+  StoreProductSubscribeScreenOptions,
+} from '@/screens/store/subscribe/StoreProductSubscribeScreen';
+import StoreCreateReviewScreen, {
+  StoreCreateReviewScreenOptions,
+} from '@/screens/store/review/StoreCreateReviewScreen';
 
 type routeProp =
   StoreDetailStackParamProps<StoreDetailNavigations.Home>['route'];
@@ -38,6 +53,33 @@ const StoreDetailStackNavigator: React.FC = () => {
         component={StoreDetailHomeScreen}
         options={StoreDetailHomeScreenOptions}
         initialParams={{ storeId: route.params?.storeId ?? undefined }}
+      />
+      <Stack.Screen
+        name={StoreDetailNavigations.PackageRegistration}
+        component={StoreProductRegistrationScreen}
+        options={StoreProductionRegistrationScreenOptions}
+        initialParams={{ storeId: route.params?.storeId ?? undefined }}
+      />
+      <Stack.Screen
+        name={StoreDetailNavigations.Product}
+        component={StoreProductHomeScreen}
+        options={StoreProductHomeScreenOptions}
+      />
+      <Stack.Screen
+        name={StoreDetailNavigations.ProductList}
+        component={StoreProductListScreen}
+        options={StoreProductListScreenOptions}
+        initialParams={{ storeId: route.params?.storeId ?? undefined }}
+      />
+      <Stack.Screen
+        name={StoreDetailNavigations.Subscribe}
+        component={StoreProductSubscribeScreen}
+        options={StoreProductSubscribeScreenOptions}
+      />
+      <Stack.Screen
+        name={StoreDetailNavigations.CreateReview}
+        component={StoreCreateReviewScreen}
+        options={StoreCreateReviewScreenOptions}
       />
     </Stack.Navigator>
   );

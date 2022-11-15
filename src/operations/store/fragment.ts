@@ -5,6 +5,7 @@ export const STORE_FRAGMENT_GQL = gql`
     id
     createdAt
     updatedAt
+    isManager
     name
     description
     location

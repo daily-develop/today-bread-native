@@ -1,26 +1,33 @@
-import React, { useMemo } from 'react';
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useMemo } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { GET_ME } from '@/operations/profile/query/GetMe';
 import Conditional from '@/hocs/Conditional';
 import { Colors } from '@/constants/color';
 import { Profile } from '@/domain/profile';
-import WhiteBreadIcon from '@/components/icons/WhiteBreadIcon';
+
+import BreadIcon from '@/components/icons/BreadIcon';
+import ProfileHomeMenu from '@/screens/profile/component/ProfileHomeMenu';
 
 const ProfileHomeHeader: React.FC = () => {
-  const { data } = GET_ME();
+  const [getMe, { data }] = GET_ME();
+
+  useEffect(() => {
+    getMe();
+  }, []);
 
   const me = useMemo<Profile>(() => data?.me, [data]);
 
   return (
-    <SafeAreaView>
+    <View>
       <View style={styles.container}>
         <View>
           <Text style={styles.name}>{me?.name ?? ''}</Text>
-          <Text style={styles.address}>{me?.address ?? ''}</Text>
+          <Text style={styles.address}>{me?.address1 ?? ''}</Text>
+          <Text style={styles.address}>{me?.address2 ?? ''}</Text>
         </View>
 
-        <Conditional condition={me?.profileImageUrl === null}>
+        <Conditional condition={me?.profileImageUrl !== null}>
           <Image
             style={styles.profileImage}
             source={{ uri: me?.profileImageUrl }}
@@ -28,13 +35,15 @@ const ProfileHomeHeader: React.FC = () => {
           />
         </Conditional>
 
-        <Conditional condition={me?.profileImageUrl !== null}>
+        <Conditional condition={me?.profileImageUrl === null}>
           <View style={[styles.profileImage, styles.emptyProfileImage]}>
-            <WhiteBreadIcon size={32} />
+            <BreadIcon size={32} />
           </View>
         </Conditional>
       </View>
-    </SafeAreaView>
+
+      <ProfileHomeMenu />
+    </View>
   );
 };
 
@@ -52,12 +61,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 20,
     color: Colors.primary,
+    marginBottom: 6,
   },
   address: {
     fontWeight: '600',
     fontSize: 13,
     color: Colors.black,
-    marginTop: 6,
+    marginTop: 2,
   },
   profileImage: {
     width: 72,

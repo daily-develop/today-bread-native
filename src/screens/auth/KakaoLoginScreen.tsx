@@ -21,7 +21,7 @@ export const KakaoLoginScreenOptions: StackNavigationOptions = {
 };
 
 const REDIRECT_URI: string = `${BASE_URL}/api/oauth/redirect`;
-const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage('s')`;
+const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage('')`;
 
 interface KakaoLoginScreenProps {
   navigation: AuthStackParamProps<AuthNavigations.KakaoLogin>['navigation'];

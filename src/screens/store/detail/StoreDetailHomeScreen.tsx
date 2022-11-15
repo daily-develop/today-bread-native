@@ -1,8 +1,16 @@
-import React, { useEffect, useMemo } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import {
+  FlatList,
+  ListRenderItem,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { StackNavigationOptions } from '@react-navigation/stack';
 import { Feather, Ionicons } from '@expo/vector-icons';
+import _ from 'lodash';
 
 import {
   StoreDetailNavigations,
@@ -16,6 +24,9 @@ import { GET_STORE } from '@/operations/store/query/GetStore';
 import Conditional from '@/hocs/Conditional';
 import { toPhoneNumber } from '@/utils/toPhoneNumber';
 import CustomImage from '@/components/CustomImage';
+import { GET_PRODUCTS } from '@/operations/product/query/GetProducts';
+import { Product } from '@/domain/product';
+import StoreDetailProductItem from '@/screens/store/detail/components/StoreDetailProductItem';
 
 export const StoreDetailHomeScreenOptions: StackNavigationOptions = {
   title: '',
@@ -39,12 +50,24 @@ const StoreDetailHomeScreen: React.FC<StoreDetailHomeScreenProps> = ({
     mainBottomNavigationVisibleVar(false);
   });
 
-  const [getStore, { data }] = GET_STORE();
+  const [getStore, { data: storeData }] = GET_STORE();
+  const [getProduct, { data: productData, fetchMore }] = GET_PRODUCTS();
 
-  const store = useMemo<Store | null>(() => data?.store ?? null, [data]);
+  const store = useMemo<Store | null>(
+    () => storeData?.store ?? null,
+    [storeData]
+  );
+
+  const productList = useMemo<Product[]>(
+    () => productData?.products ?? [],
+    [productData]
+  );
 
   useEffect(() => {
     getStore({ variables: { storeId: route.params.storeId } });
+    getProduct({
+      variables: { storeId: route.params.storeId, saleOnly: true },
+    });
   }, [route.params.storeId]);
 
   useEffect(() => {
@@ -54,6 +77,30 @@ const StoreDetailHomeScreen: React.FC<StoreDetailHomeScreenProps> = ({
       });
     }
   }, [store?.name]);
+
+  const keyExtractor = useCallback((item: Product) => item.id, []);
+
+  const renderItem = useCallback<ListRenderItem<Product>>(
+    ({ item }) => <StoreDetailProductItem product={item} />,
+    []
+  );
+
+  const onEndReached = useCallback(() => {
+    if (productList.length % 10 === 0) {
+      fetchMore({
+        variables: {
+          page: Math.floor(productList.length / 10) + 1,
+          take: 10,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => ({
+          products: _(prev?.products ?? [])
+            .unionBy(fetchMoreResult?.products, 'id')
+            .orderBy((item) => item.createdAt, ['desc'])
+            .value(),
+        }),
+      });
+    }
+  }, [productList.length]);
 
   return (
     <SafeAreaView style={styles.safeContainer}>
@@ -85,6 +132,16 @@ const StoreDetailHomeScreen: React.FC<StoreDetailHomeScreenProps> = ({
               {` ${toPhoneNumber(store?.phone ?? '')}`}
             </Text>
           </View>
+
+          <FlatList<Product>
+            data={productList}
+            keyExtractor={keyExtractor}
+            renderItem={renderItem}
+            onEndReachedThreshold={10}
+            onEndReached={onEndReached}
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+          />
         </View>
       </Conditional>
     </SafeAreaView>
