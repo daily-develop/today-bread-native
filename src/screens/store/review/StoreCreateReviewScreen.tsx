@@ -96,6 +96,7 @@ const StoreCreateReviewScreen: React.FC<StoreCreateReviewScreenProps> = ({
       <View style={styles.container}>
         <View style={styles.productContainer}>
           <CustomImage
+            style={styles.image}
             imageUrl={data?.product?.image?.url}
             width={80}
             height={80}
@@ -164,6 +165,9 @@ const styles = StyleSheet.create({
   },
   productContainer: {
     flexDirection: 'row',
+  },
+  image: {
+    borderRadius: 5,
   },
   productInfoContainer: {
     justifyContent: 'center',
