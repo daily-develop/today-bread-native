@@ -10,6 +10,11 @@ import {
 } from '@/navigations/stack/store';
 import { BASE_URL } from '@/constants';
 import { SUCCESS_ORDER } from '@/operations/order/mutation/SuccessOrder';
+import {
+  Data as HasOrderData,
+  HAS_ORDER_GQL,
+  Variables as HasOrderVariables,
+} from '@/operations/order/query/HasOrder';
 
 export const StoreProductSubscribeScreenOptions: StackNavigationOptions = {
   headerShown: false,
@@ -44,7 +49,23 @@ const StoreProductSubscribeScreen: React.FC<
     (event: WebViewMessageEvent) => {
       if (event.nativeEvent.url.startsWith(REDIRECT_URI)) {
         if (event.nativeEvent.url.includes('status=success')) {
-          successOrder();
+          successOrder({
+            update: (cache, { data }) => {
+              if (!data) return;
+
+              cache.updateQuery<HasOrderData, HasOrderVariables>(
+                {
+                  query: HAS_ORDER_GQL,
+                  variables: {
+                    productId: route.params.productId,
+                  },
+                },
+                () => ({
+                  hasOrder: true,
+                })
+              );
+            },
+          });
         }
 
         navigation.goBack();

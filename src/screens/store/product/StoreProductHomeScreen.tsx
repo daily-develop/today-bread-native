@@ -136,6 +136,7 @@ const StoreProductHomeScreen: React.FC<StoreProductHomeScreenProps> = ({
       } = await createOrder({ variables: { productId: data?.product?.id } });
 
       navigation.push(StoreDetailNavigations.Subscribe, {
+        productId: data?.product?.id,
         orderId: id,
         orderUrl,
         orderSecret,
