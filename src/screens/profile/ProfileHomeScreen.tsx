@@ -23,7 +23,9 @@ const ProfileHomeScreen: React.FC<ProfileHomeScreenProps> = () => {
     mainBottomNavigationVisibleVar(true);
   });
 
-  const [getManagedStore, { data, fetchMore }] = GET_MANAGED_STORE();
+  const [getManagedStore, { data, fetchMore }] = GET_MANAGED_STORE({
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     getManagedStore({

@@ -5,7 +5,13 @@ import { StackNavigationOptions } from '@react-navigation/stack';
 import * as MediaLibrary from 'expo-media-library';
 import { PhotoIcon } from 'react-native-heroicons/mini';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import _ from 'lodash';
 
+import {
+  Data as GetManagedStoreData,
+  GET_MANAGED_STORE_GQL,
+  Variable as GetManagedStoreVariable,
+} from '@/operations/store/query/GetManagedStore';
 import {
   ProfileNavigations,
   ProfileStackParamProps,
@@ -74,6 +80,19 @@ const CreateStoreScreen: React.FC<CreateStoreScreenProps> = ({
         manager: {
           nickname: nickname.trim(),
         },
+      },
+      update: (cache, { data }) => {
+        if (!data) return;
+
+        cache.updateQuery<GetManagedStoreData, GetManagedStoreVariable>(
+          { query: GET_MANAGED_STORE_GQL },
+          (prev) => ({
+            managedStore: _(prev?.managedStore ?? [])
+              .unionBy([data?.createStore], 'id')
+              .orderBy((store) => store.createdAt, ['desc'])
+              .value(),
+          })
+        );
       },
     });
 

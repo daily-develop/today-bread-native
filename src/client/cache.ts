@@ -6,6 +6,18 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
+        managedStore: {
+          keyArgs: false,
+          merge: (
+            existing: Reference[] = [],
+            incoming: Reference[],
+            { readField }
+          ) =>
+            _(existing)
+              .unionBy(incoming, '__ref')
+              .orderBy((store) => readField('createdAt', store), ['desc'])
+              .value(),
+        },
         productsRanking: {
           keyArgs: false,
           merge: (

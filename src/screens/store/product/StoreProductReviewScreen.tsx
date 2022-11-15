@@ -33,7 +33,9 @@ const StoreProductReviewScreen: React.FC<StoreProductReviewScreenProps> = ({
       productId: route.params.productId,
     },
   });
-  const [getReviews, { data: reviewData }] = GET_REVIEWS();
+  const [getReviews, { data: reviewData }] = GET_REVIEWS({
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     getProduct();
@@ -44,7 +46,7 @@ const StoreProductReviewScreen: React.FC<StoreProductReviewScreenProps> = ({
         take: 10,
       },
     });
-  }, []);
+  }, [route.params.productId]);
 
   const keyExtractor = useCallback((item: Review) => item.id, []);
 
